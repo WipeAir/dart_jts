@@ -124,7 +124,8 @@ abstract class Geometry implements Comparable {
   static final int SORTINDEX_MULTIPOLYGON = 6;
   static final int SORTINDEX_GEOMETRYCOLLECTION = 7;
 
-  static final GeometryComponentFilter geometryChangedFilter = GeometryChangedFilter();
+  static final GeometryComponentFilter geometryChangedFilter =
+      GeometryChangedFilter();
 
   ///  The bounding box of this <code>Geometry</code>.
   Envelope envelope;
@@ -583,7 +584,8 @@ abstract class Geometry implements Comparable {
    */
   bool touches(Geometry g) {
     // short-circuit test
-    if (!getEnvelopeInternal().intersectsEnvelope(g.getEnvelopeInternal())) return false;
+    if (!getEnvelopeInternal().intersectsEnvelope(g.getEnvelopeInternal()))
+      return false;
     return relate(g).isTouches(getDimension(), g.getDimension());
   }
 
@@ -612,7 +614,8 @@ abstract class Geometry implements Comparable {
    */
   bool intersects(Geometry g) {
     // short-circuit envelope test
-    if (!getEnvelopeInternal().intersectsEnvelope(g.getEnvelopeInternal())) return false;
+    if (!getEnvelopeInternal().intersectsEnvelope(g.getEnvelopeInternal()))
+      return false;
 
     /**
      * TODO: (MD) Add optimizations:
@@ -677,7 +680,8 @@ abstract class Geometry implements Comparable {
    */
   bool crosses(Geometry g) {
     // short-circuit test
-    if (!getEnvelopeInternal().intersectsEnvelope(g.getEnvelopeInternal())) return false;
+    if (!getEnvelopeInternal().intersectsEnvelope(g.getEnvelopeInternal()))
+      return false;
     return relate(g).isCrosses(getDimension(), g.getDimension());
   }
 
@@ -752,7 +756,8 @@ abstract class Geometry implements Comparable {
       return false;
     }
     // optimization - envelope test
-    if (!getEnvelopeInternal().containsEnvelope(g.getEnvelopeInternal())) return false;
+    if (!getEnvelopeInternal().containsEnvelope(g.getEnvelopeInternal()))
+      return false;
     // optimization for rectangle arguments
     if (isRectangle()) {
       return RectangleContains.containsStatic(this as Polygon, g);
@@ -784,7 +789,8 @@ abstract class Geometry implements Comparable {
    */
   bool overlaps(Geometry g) {
     // short-circuit test
-    if (!getEnvelopeInternal().intersectsEnvelope(g.getEnvelopeInternal())) return false;
+    if (!getEnvelopeInternal().intersectsEnvelope(g.getEnvelopeInternal()))
+      return false;
     return relate(g).isOverlaps(getDimension(), g.getDimension());
   }
 
@@ -833,7 +839,8 @@ abstract class Geometry implements Comparable {
       return false;
     }
     // optimization - envelope test
-    if (!getEnvelopeInternal().coversEnvelope(g.getEnvelopeInternal())) return false;
+    if (!getEnvelopeInternal().coversEnvelope(g.getEnvelopeInternal()))
+      return false;
     // optimization for rectangle arguments
     if (isRectangle()) {
       // since we have already tested that the test envelope is covered
@@ -1360,8 +1367,25 @@ abstract class Geometry implements Comparable {
    * @see UnaryUnionOp
    */
   Geometry union() {
-    throw UnimplementedError("Not implemented yet"); // TODO
-//    return UnaryUnionOp.union(this);
+    return UnaryUnionOp.unionSingle(this);
+  }
+
+  Geometry unionOther(Geometry other) {
+    // handle empty geometry cases
+    if (isEmpty() || other.isEmpty()) {
+      if (isEmpty() && other.isEmpty())
+        return OverlayOp.createEmptyResult(
+            OverlayOp.UNION, this, other, geomFactory);
+
+      // special case: if either input is empty ==> other input
+      if (isEmpty()) return other.copy();
+      if (other.isEmpty()) return copy();
+    }
+    // TODO: optimize if envelopes of geometries do not intersect
+
+    checkNotGeometryCollection(this);
+    checkNotGeometryCollection(other);
+    return SnapIfNeededOverlayOp.overlayOp(this, other, OverlayOp.UNION);
   }
 
   /**
@@ -1684,7 +1708,8 @@ abstract class Geometry implements Comparable {
    */
   static void checkNotGeometryCollection(Geometry g) {
     if (g.isGeometryCollection()) {
-      throw new ArgumentError("Operation does not support GeometryCollection arguments");
+      throw new ArgumentError(
+          "Operation does not support GeometryCollection arguments");
     }
   }
 
@@ -1734,7 +1759,8 @@ abstract class Geometry implements Comparable {
    *      defined in "Normal Form For Geometry" in the JTS Technical
    *      Specifications
    */
-  int compareToSameClassWithComparator(Object o, Comparator<CoordinateSequence> comp);
+  int compareToSameClassWithComparator(
+      Object o, Comparator<CoordinateSequence> comp);
 
   /**
    *  Returns the first non-zero result of <code>compareTo</code> encountered as
@@ -1799,7 +1825,8 @@ class GeometryFactory {
 
   /// Constructs a GeometryFactory that generates Geometries having the given
   /// PrecisionModel, spatial-reference ID, and CoordinateSequence implementation.
-  GeometryFactory(PrecisionModel precisionModel, int SRID, CoordinateSequenceFactory coordinateSequenceFactory) {
+  GeometryFactory(PrecisionModel precisionModel, int SRID,
+      CoordinateSequenceFactory coordinateSequenceFactory) {
     this._precisionModel = precisionModel;
     this._coordinateSequenceFactory = coordinateSequenceFactory;
     this._SRID = SRID;
@@ -1808,14 +1835,17 @@ class GeometryFactory {
   /// Constructs a GeometryFactory that generates Geometries having the given
   /// CoordinateSequence implementation, a double-precision floating PrecisionModel and a
   /// spatial-reference ID of 0.
-  GeometryFactory.withCoordinateSequenceFactory(CoordinateSequenceFactory coordinateSequenceFactory) : this(PrecisionModel(), 0, coordinateSequenceFactory);
+  GeometryFactory.withCoordinateSequenceFactory(
+      CoordinateSequenceFactory coordinateSequenceFactory)
+      : this(PrecisionModel(), 0, coordinateSequenceFactory);
 
   /// Constructs a GeometryFactory that generates Geometries having the given
   /// {@link PrecisionModel} and the default CoordinateSequence
   /// implementation.
   ///
   /// @param precisionModel the PrecisionModel to use
-  GeometryFactory.withPrecisionModel(PrecisionModel precisionModel) : this(precisionModel, 0, getDefaultCoordinateSequenceFactory());
+  GeometryFactory.withPrecisionModel(PrecisionModel precisionModel)
+      : this(precisionModel, 0, getDefaultCoordinateSequenceFactory());
 
   /// Constructs a GeometryFactory that generates Geometries having the given
   /// {@link PrecisionModel} and spatial-reference ID, and the default CoordinateSequence
@@ -1823,14 +1853,29 @@ class GeometryFactory {
   ///
   /// @param precisionModel the PrecisionModel to use
   /// @param SRID the SRID to use
-  GeometryFactory.withPrecisionModelSrid(PrecisionModel precisionModel, int SRID) : this(precisionModel, SRID, getDefaultCoordinateSequenceFactory());
+  GeometryFactory.withPrecisionModelSrid(
+      PrecisionModel precisionModel, int SRID)
+      : this(precisionModel, SRID, getDefaultCoordinateSequenceFactory());
 
   /// Constructs a GeometryFactory that generates Geometries having a floating
   /// PrecisionModel and a spatial-reference ID of 0.
-  GeometryFactory.defaultPrecision() : this.withPrecisionModelSrid(PrecisionModel(), 0);
+  GeometryFactory.defaultPrecision()
+      : this.withPrecisionModelSrid(PrecisionModel(), 0);
 
   static CoordinateSequenceFactory getDefaultCoordinateSequenceFactory() {
     return CoordinateArraySequenceFactory();
+  }
+
+  /**
+   *  Converts the <code>List</code> to an array.
+   *
+   *@param  geometries  the list of <code>Geometry's</code> to convert
+   *@return            the <code>List</code> in array format
+   */
+  static List<Geometry> toGeometryArray(List geometries) {
+    if (geometries == null) return null;
+    List<Geometry> geometryArray = [];
+    return geometries;
   }
 
   /**
@@ -1859,13 +1904,19 @@ class GeometryFactory {
     }
 
     // point?
-    if (envelope.getMinX() == envelope.getMaxX() && envelope.getMinY() == envelope.getMaxY()) {
-      return createPoint(new Coordinate(envelope.getMinX(), envelope.getMinY()));
+    if (envelope.getMinX() == envelope.getMaxX() &&
+        envelope.getMinY() == envelope.getMaxY()) {
+      return createPoint(
+          new Coordinate(envelope.getMinX(), envelope.getMinY()));
     }
 
     // vertical or horizontal line?
-    if (envelope.getMinX() == envelope.getMaxX() || envelope.getMinY() == envelope.getMaxY()) {
-      return createLineString([new Coordinate(envelope.getMinX(), envelope.getMinY()), new Coordinate(envelope.getMaxX(), envelope.getMaxY())]);
+    if (envelope.getMinX() == envelope.getMaxX() ||
+        envelope.getMinY() == envelope.getMaxY()) {
+      return createLineString([
+        new Coordinate(envelope.getMinX(), envelope.getMinY()),
+        new Coordinate(envelope.getMaxX(), envelope.getMaxY())
+      ]);
     }
 
     // create a CW ring for the polygon
@@ -1896,7 +1947,8 @@ class GeometryFactory {
    * @return an empty Point
    */
   Point createPointEmpty() {
-    return createPointSeq(getCoordinateSequenceFactory().create(<Coordinate>[]));
+    return createPointSeq(
+        getCoordinateSequenceFactory().create(<Coordinate>[]));
   }
 
   /**
@@ -1907,7 +1959,9 @@ class GeometryFactory {
    * @return the created Point
    */
   Point createPoint(Coordinate coordinate) {
-    return createPointSeq(coordinate != null ? getCoordinateSequenceFactory().create([coordinate]) : null);
+    return createPointSeq(coordinate != null
+        ? getCoordinateSequenceFactory().create([coordinate])
+        : null);
   }
 
   /**
@@ -1991,7 +2045,8 @@ class GeometryFactory {
    * @return an empty LinearRing
    */
   LinearRing createLinearRingEmpty() {
-    return createLinearRingSeq(getCoordinateSequenceFactory().create(<Coordinate>[]));
+    return createLinearRingSeq(
+        getCoordinateSequenceFactory().create(<Coordinate>[]));
   }
 
   /**
@@ -2003,7 +2058,9 @@ class GeometryFactory {
    * @throws IllegalArgumentException if the ring is not closed, or has too few points
    */
   LinearRing createLinearRing(List<Coordinate> coordinates) {
-    return createLinearRingSeq(coordinates != null ? getCoordinateSequenceFactory().create(coordinates) : null);
+    return createLinearRingSeq(coordinates != null
+        ? getCoordinateSequenceFactory().create(coordinates)
+        : null);
   }
 
   /**
@@ -2047,7 +2104,9 @@ class GeometryFactory {
    * @return a MultiPoint object
    */
   MultiPoint createMultiPointFromCoords(List<Coordinate> coordinates) {
-    return createMultiPointSeq(coordinates != null ? getCoordinateSequenceFactory().create(coordinates) : null);
+    return createMultiPointSeq(coordinates != null
+        ? getCoordinateSequenceFactory().create(coordinates)
+        : null);
   }
 
   /**
@@ -2064,7 +2123,9 @@ class GeometryFactory {
     }
     List<Point> points = List(coordinates.size());
     for (int i = 0; i < coordinates.size(); i++) {
-      CoordinateSequence ptSeq = getCoordinateSequenceFactory().createSizeDimMeas(1, coordinates.getDimension(), coordinates.getMeasures());
+      CoordinateSequence ptSeq = getCoordinateSequenceFactory()
+          .createSizeDimMeas(
+              1, coordinates.getDimension(), coordinates.getMeasures());
       CoordinateSequences.copy(coordinates, i, ptSeq, 0, 1);
       points[i] = createPointSeq(ptSeq);
     }
@@ -2217,7 +2278,8 @@ class GeometryFactory {
    * @return an empty LineString
    */
   LineString createLineStringEmpty() {
-    return createLineStringSeq(getCoordinateSequenceFactory().create(<Coordinate>[]));
+    return createLineStringSeq(
+        getCoordinateSequenceFactory().create(<Coordinate>[]));
   }
 
   /**
@@ -2227,7 +2289,9 @@ class GeometryFactory {
    * @param coordinates an array without null elements, or an empty array, or null
    */
   LineString createLineString(List<Coordinate> coordinates) {
-    return createLineStringSeq(coordinates != null ? getCoordinateSequenceFactory().create(coordinates) : null);
+    return createLineStringSeq(coordinates != null
+        ? getCoordinateSequenceFactory().create(coordinates)
+        : null);
   }
 
   /**

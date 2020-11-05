@@ -3193,7 +3193,7 @@ abstract class GraphComponent {
  * @version 1.7
  */
 class EdgeList {
-  List edges = [];
+  List<Edge> edges = [];
 
   /**
    * An index of the edges, for fast lookup.
@@ -3218,7 +3218,7 @@ class EdgeList {
     }
   }
 
-  List getEdges() {
+  List<Edge> getEdges() {
     return edges;
   }
 

@@ -1865,3 +1865,88 @@ abstract class CoordinateSequenceOperation implements GeometryEditorOperation {
    */
   CoordinateSequence editSeq(CoordinateSequence coordSeq, Geometry geometry);
 }
+
+class GeometryCombiner
+{
+  static Geometry combine1(List geoms)
+  {
+    GeometryCombiner combiner = new GeometryCombiner(geoms);
+    return combiner.combine();
+  }
+
+  static Geometry combine2(Geometry g0, Geometry g1)
+  {
+    GeometryCombiner combiner = GeometryCombiner(createList2(g0, g1));
+    return combiner.combine();
+  }
+
+  static Geometry combine3(Geometry g0, Geometry g1, Geometry g2)
+  {
+    GeometryCombiner combiner = GeometryCombiner(createList3(g0, g1, g2));
+    return combiner.combine();
+  }
+
+  static List createList2(Object obj0, Object obj1)
+  {
+    List list = [];
+    list.add(obj0);
+    list.add(obj1);
+    return list;
+  }
+
+  static List createList3(Object obj0, Object obj1, Object obj2)
+  {
+    List list = [];
+    list.add(obj0);
+    list.add(obj1);
+    list.add(obj2);
+    return list;
+  }
+  GeometryFactory geomFactory;
+  bool skipEmpty = false;
+  List inputGeoms;
+
+  GeometryCombiner(List geoms)
+  {
+    geomFactory = extractFactory(geoms);
+    this.inputGeoms = geoms;
+  }
+
+  static GeometryFactory extractFactory(List geoms)
+  {
+    if (geoms.isEmpty) {
+      return null;
+    }
+    return geoms.first.getFactory();
+  }
+
+  Geometry combine()
+  {
+    List elems = [];
+    for (Iterator i = inputGeoms.iterator; i.moveNext(); ) {
+      Geometry g = i.current;
+      extractElements(g, elems);
+    }
+    if (elems.length == 0) {
+      if (geomFactory != null) {
+        return geomFactory.createGeometryCollection([]);
+      }
+      return null;
+    }
+    return geomFactory.buildGeometry(elems);
+  }
+
+  void extractElements(Geometry geom, List elems)
+  {
+    if (geom == null) {
+      return;
+    }
+    for (int i = 0; i < geom.getNumGeometries(); i++) {
+      Geometry elemGeom = geom.getGeometryN(i);
+      if (skipEmpty && elemGeom.isEmpty()) {
+        continue;
+      }
+      elems.add(elemGeom);
+    }
+  }
+}

@@ -1943,3 +1943,223 @@ class IntersectionAdder implements SegmentIntersectorN {
     return false;
   }
 }
+
+/**
+ * Represents a list of contiguous line segments,
+ * and supports noding the segments.
+ * The line segments are represented by an array of {@link Coordinate}s.
+ * Intended to optimize the noding of contiguous segments by
+ * reducing the number of allocated objects.
+ * SegmentStrings can carry a context object, which is useful
+ * for preserving topological or parentage information.
+ * All noded substrings are initialized with the same context object.
+ *
+ * @version 1.7
+ */
+class BasicSegmentString
+    implements SegmentString
+{
+  List<Coordinate> _pts;
+  Object _data;
+
+  /**
+   * Creates a new segment string from a list of vertices.
+   *
+   * @param pts the vertices of the segment string
+   * @param data the user-defined data of this segment string (may be null)
+   */
+  BasicSegmentString(List<Coordinate> pts, Object data)
+  {
+    _pts = pts;
+    _data = data;
+  }
+
+  /**
+   * Gets the user-defined data for this segment string.
+   *
+   * @return the user-defined data
+   */
+  Object getData() { return _data; }
+
+  /**
+   * Sets the user-defined data for this segment string.
+   *
+   * @param data an Object containing user-defined data
+   */
+  void setData(Object data) { _data = data; }
+
+  int size() { return _pts.length; }
+
+  Coordinate getCoordinate(int i) { return _pts[i]; }
+
+  List<Coordinate> getCoordinates() { return _pts; }
+
+  bool isClosed()
+  {
+    return _pts[0].equals(_pts[_pts.length - 1]);
+  }
+
+  /**
+   * Gets the octant of the segment starting at vertex <code>index</code>.
+   *
+   * @param index the index of the vertex starting the segment.  Must not be
+   * the last index in the vertex list
+   * @return the octant of the segment at the vertex
+   */
+  int getSegmentOctant(int index)
+  {
+    if (index == _pts.length - 1) return -1;
+    return Octant.octantCoords(getCoordinate(index), getCoordinate(index + 1));
+  }
+
+  String toString()
+  {
+    return WKTWriter.toLineStringFromSequence(new CoordinateArraySequence(_pts));
+  }
+}
+
+/**
+ * Validates that a collection of {@link SegmentString}s is correctly noded.
+ * Indexing is used to improve performance.
+ * By default validation stops after a single
+ * non-noded intersection is detected.
+ * Alternatively, it can be requested to detect all intersections
+ * by using {@link #setFindAllIntersections(boolean)}.
+ * <p>
+ * The validator does not check for topology collapse situations
+ * (e.g. where two segment strings are fully co-incident).
+ * <p>
+ * The validator checks for the following situations which indicated incorrect noding:
+ * <ul>
+ * <li>Proper intersections between segments (i.e. the intersection is interior to both segments)
+ * <li>Intersections at an interior vertex (i.e. with an endpoint or another interior vertex)
+ * </ul>
+ * <p>
+ * The client may either test the {@link #isValid()} condition,
+ * or request that a suitable {@link TopologyException} be thrown.
+ *
+ * @version 1.7
+ *
+ * @see NodingIntersectionFinder
+ */
+class FastNodingValidator
+{
+  /**
+   * Gets a list of all intersections found.
+   * Intersections are represented as {@link Coordinate}s.
+   * List is empty if none were found.
+   *
+   * @param segStrings a collection of SegmentStrings
+   * @return a list of Coordinate
+   */
+  static List computeIntersections(List segStrings)
+  {
+    FastNodingValidator nv = new FastNodingValidator(segStrings);
+    nv.setFindAllIntersections(true);
+    nv.isValid();
+    return nv.getIntersections();
+  }
+
+  LineIntersector _li = new RobustLineIntersector();
+
+  List _segStrings;
+  bool _findAllIntersections = false;
+  NodingIntersectionFinder _segInt = null;
+  bool _isValid = true;
+
+  /**
+   * Creates a new noding validator for a given set of linework.
+   *
+   * @param segStrings a collection of {@link SegmentString}s
+   */
+  FastNodingValidator(List segStrings)
+  {
+    _segStrings = segStrings;
+  }
+
+  void setFindAllIntersections(bool findAllIntersections)
+  {
+    _findAllIntersections = findAllIntersections;
+  }
+
+  /**
+   * Gets a list of all intersections found.
+   * Intersections are represented as {@link Coordinate}s.
+   * List is empty if none were found.
+   *
+   * @return a list of Coordinate
+   */
+  List getIntersections()
+  {
+    return _segInt.getIntersections();
+  }
+
+  /**
+   * Checks for an intersection and
+   * reports if one is found.
+   *
+   * @return true if the arrangement contains an interior intersection
+   */
+  bool isValid()
+  {
+    _execute();
+    return _isValid;
+  }
+
+  /**
+   * Returns an error message indicating the segments containing
+   * the intersection.
+   *
+   * @return an error message documenting the intersection location
+   */
+  String getErrorMessage()
+  {
+    if (_isValid) return "no intersections found";
+
+    List<Coordinate> intSegs = _segInt.getIntersectionSegments();
+    return "found non-noded intersection between "
+        + WKTWriter.toLineStringFromCoords(intSegs[0], intSegs[1])
+        + " and "
+        + WKTWriter.toLineStringFromCoords(intSegs[2], intSegs[3]);
+  }
+
+  /**
+   * Checks for an intersection and throws
+   * a TopologyException if one is found.
+   *
+   * @throws TopologyException if an intersection is found
+   */
+  void checkValid()
+  {
+    _execute();
+    if (!_isValid)
+      throw TopologyException.withCoord(getErrorMessage(), _segInt.getIntersection());
+  }
+
+  void _execute()
+  {
+    if (_segInt != null)
+      return;
+    _checkInteriorIntersections();
+  }
+
+  void _checkInteriorIntersections()
+  {
+    /**
+     * MD - It may even be reliable to simply check whether
+     * end segments (of SegmentStrings) have an interior intersection,
+     * since noding should have split any true interior intersections already.
+     */
+    _isValid = true;
+    _segInt = NodingIntersectionFinder(_li);
+    _segInt.setFindAllIntersections(_findAllIntersections);
+    MCIndexNoder noder = MCIndexNoder.empty();
+    noder.setSegmentIntersector(_segInt);
+    noder.computeNodes(_segStrings);
+    if (_segInt.hasIntersection()) {
+      _isValid = false;
+      return;
+    }
+  }
+}
+
