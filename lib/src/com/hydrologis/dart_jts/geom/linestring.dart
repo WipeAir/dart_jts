@@ -36,7 +36,9 @@ class LineString extends Geometry implements Lineal {
    * @throws IllegalArgumentException if too few points are provided
    */
   /** @deprecated Use GeometryFactory instead */
-  LineString(List<Coordinate> points, PrecisionModel precisionModel, int SRID) : super(new GeometryFactory.withPrecisionModelSrid(precisionModel, SRID)) {
+  LineString(List<Coordinate> points, PrecisionModel precisionModel, int SRID)
+      : super(
+            new GeometryFactory.withPrecisionModelSrid(precisionModel, SRID)) {
     init(getFactory().getCoordinateSequenceFactory().create(points));
   }
 
@@ -47,7 +49,8 @@ class LineString extends Geometry implements Lineal {
    *      to create the empty geometry.
    * @throws IllegalArgumentException if too few points are provided
    */
-  LineString.fromSequence(CoordinateSequence points, GeometryFactory factory) : super(factory) {
+  LineString.fromSequence(CoordinateSequence points, GeometryFactory factory)
+      : super(factory) {
     init(points);
   }
 
@@ -56,7 +59,8 @@ class LineString extends Geometry implements Lineal {
       points = getFactory().getCoordinateSequenceFactory().create([]);
     }
     if (points.size() == 1) {
-      throw new ArgumentError("Invalid number of points in LineString (found ${points.size()} - must be 0 or >= 2)");
+      throw new ArgumentError(
+          "Invalid number of points in LineString (found ${points.size()} - must be 0 or >= 2)");
     }
     this.points = points;
   }
@@ -195,7 +199,8 @@ class LineString extends Geometry implements Lineal {
       return false;
     }
     for (int i = 0; i < points.size(); i++) {
-      if (!equal(points.getCoordinate(i), otherLineString.points.getCoordinate(i), tolerance)) {
+      if (!equal(points.getCoordinate(i),
+          otherLineString.points.getCoordinate(i), tolerance)) {
         return false;
       }
     }
@@ -270,7 +275,8 @@ class LineString extends Geometry implements Lineal {
     int i = 0;
     int j = 0;
     while (i < points.size() && j < line.points.size()) {
-      int comparison = points.getCoordinate(i).compareTo(line.points.getCoordinate(j));
+      int comparison =
+          points.getCoordinate(i).compareTo(line.points.getCoordinate(j));
       if (comparison != 0) {
         return comparison;
       }
@@ -286,7 +292,8 @@ class LineString extends Geometry implements Lineal {
     return 0;
   }
 
-  int compareToSameClassWithComparator(Object o, Comparator<CoordinateSequence> comp) {
+  int compareToSameClassWithComparator(
+      Object o, Comparator<CoordinateSequence> comp) {
     LineString line = o as LineString;
     return comp(this.points, line.points);
   }
@@ -334,7 +341,8 @@ class LinearRing extends LineString {
    * @deprecated Use GeometryFactory instead
    */
   LinearRing(List<Coordinate> points, PrecisionModel precisionModel, int SRID)
-      : this.withFactory(points, new GeometryFactory.withPrecisionModelSrid(precisionModel, SRID));
+      : this.withFactory(points,
+            new GeometryFactory.withPrecisionModelSrid(precisionModel, SRID));
 
 //  TODO check this{
 //  validateConstruction();
@@ -346,7 +354,9 @@ class LinearRing extends LineString {
    * @param factory
    * @throws IllegalArgumentException if the ring is not closed, or has too few points
    */
-  LinearRing.withFactory(List<Coordinate> points, GeometryFactory factory) : this.fromSequence(factory.getCoordinateSequenceFactory().create(points), factory);
+  LinearRing.withFactory(List<Coordinate> points, GeometryFactory factory)
+      : this.fromSequence(
+            factory.getCoordinateSequenceFactory().create(points), factory);
 
   /**
    * Constructs a <code>LinearRing</code> with the vertices
@@ -358,16 +368,20 @@ class LinearRing extends LineString {
    * @throws IllegalArgumentException if the ring is not closed, or has too few points
    *
    */
-  LinearRing.fromSequence(CoordinateSequence points, GeometryFactory factory) : super.fromSequence(points, factory) {
+  LinearRing.fromSequence(CoordinateSequence points, GeometryFactory factory)
+      : super.fromSequence(points, factory) {
     validateConstruction();
   }
 
   void validateConstruction() {
     if (!isEmpty() && !super.isClosed()) {
-      throw new ArgumentError("Points of LinearRing do not form a closed linestring");
+      throw new ArgumentError(
+          "Points of LinearRing do not form a closed linestring");
     }
-    if (getCoordinateSequence().size() >= 1 && getCoordinateSequence().size() < MINIMUM_VALID_SIZE) {
-      throw new ArgumentError("Invalid number of points in LinearRing (found ${getCoordinateSequence().size()} - must be 0 or >= 4)");
+    if (getCoordinateSequence().size() >= 1 &&
+        getCoordinateSequence().size() < MINIMUM_VALID_SIZE) {
+      throw new ArgumentError(
+          "Invalid number of points in LinearRing (found ${getCoordinateSequence().size()} - must be 0 or >= 4)");
     }
   }
 
@@ -436,11 +450,14 @@ class LineSegment implements Comparable {
     this.p1 = p1;
   }
 
-  LineSegment(double x0, double y0, double x1, double y1) : this.fromCoordinates(new Coordinate(x0, y0), new Coordinate(x1, y1));
+  LineSegment(double x0, double y0, double x1, double y1)
+      : this.fromCoordinates(new Coordinate(x0, y0), new Coordinate(x1, y1));
 
   LineSegment.fromSegment(LineSegment ls) : this.fromCoordinates(ls.p0, ls.p1);
 
-  LineSegment.empty() : this.fromCoordinates(new Coordinate.empty2D(), new Coordinate.empty2D());
+  LineSegment.empty()
+      : this.fromCoordinates(
+            new Coordinate.empty2D(), new Coordinate.empty2D());
 
   Coordinate getCoordinate(int i) {
     if (i == 0) return p0;
@@ -673,7 +690,8 @@ class LineSegment implements Comparable {
    *
    * @throws IllegalStateException if the segment has zero length
    */
-  Coordinate pointAlongOffset(double segmentLengthFraction, double offsetDistance) {
+  Coordinate pointAlongOffset(
+      double segmentLengthFraction, double offsetDistance) {
     // the point on the segment line
     double segx = p0.x + segmentLengthFraction * (p1.x - p0.x);
     double segy = p0.y + segmentLengthFraction * (p1.y - p0.y);
@@ -684,7 +702,9 @@ class LineSegment implements Comparable {
     double ux = 0.0;
     double uy = 0.0;
     if (offsetDistance != 0.0) {
-      if (len <= 0.0) throw new StateError("Cannot compute offset from zero-length line segment");
+      if (len <= 0.0)
+        throw new StateError(
+            "Cannot compute offset from zero-length line segment");
 
       // u is the vector that is the length of the offset, in the direction of the segment
       ux = offsetDistance * dx / len;
@@ -998,10 +1018,19 @@ class LineSegment implements Comparable {
    *      with the same values for the x and y ordinates.
    */
   bool equalsTopo(LineSegment other) {
-    return p0.equals(other.p0) && p1.equals(other.p1) || p0.equals(other.p1) && p1.equals(other.p0);
+    return p0.equals(other.p0) && p1.equals(other.p1) ||
+        p0.equals(other.p1) && p1.equals(other.p0);
   }
 
   String toString() {
-    return "LINESTRING( " + p0.x.toString() + " " + p0.y.toString() + ", " + p1.x.toString() + " " + p1.y.toString() + ")";
+    return "LINESTRING( " +
+        p0.x.toString() +
+        " " +
+        p0.y.toString() +
+        ", " +
+        p1.x.toString() +
+        " " +
+        p1.y.toString() +
+        ")";
   }
 }

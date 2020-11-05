@@ -1,26 +1,22 @@
 part of dart_jts;
 
-class PointGeometryUnion
-{
-
-  static Geometry unionStatic(Puntal pointGeom, Geometry otherGeom)
-  {
+class PointGeometryUnion {
+  static Geometry unionStatic(Puntal pointGeom, Geometry otherGeom) {
     PointGeometryUnion unioner = PointGeometryUnion(pointGeom, otherGeom);
     return unioner.union();
   }
+
   Geometry pointGeom;
   Geometry otherGeom;
   GeometryFactory geomFact;
 
-  PointGeometryUnion(Puntal pointGeom, Geometry otherGeom)
-  {
+  PointGeometryUnion(Puntal pointGeom, Geometry otherGeom) {
     this.pointGeom = pointGeom as Geometry;
     this.otherGeom = otherGeom;
     geomFact = otherGeom.getFactory();
   }
 
-  Geometry union()
-  {
+  Geometry union() {
     PointLocator locater = new PointLocator();
     List<Coordinate> exteriorCoords = [];
     for (int i = 0; i < pointGeom.getNumGeometries(); i++) {

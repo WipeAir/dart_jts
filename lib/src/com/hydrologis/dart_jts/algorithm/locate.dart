@@ -29,7 +29,8 @@ class IndexedPointInAreaLocator implements PointOnGeometryLocator {
    * @param g the Geometry to locate in
    */
   IndexedPointInAreaLocator(Geometry g) {
-    if (!(g is Polygonal || g is LinearRing)) throw new ArgumentError("Argument must be Polygonal or LinearRing");
+    if (!(g is Polygonal || g is LinearRing))
+      throw new ArgumentError("Argument must be Polygonal or LinearRing");
     index = new IntervalIndexedGeometry(g);
   }
 
@@ -167,7 +168,8 @@ class SimplePointInAreaLocator implements PointOnGeometryLocator {
     /**
      * Do a fast check against the geometry envelope first
      */
-    if (!geom.getEnvelopeInternal().intersectsCoordinate(p)) return Location.EXTERIOR;
+    if (!geom.getEnvelopeInternal().intersectsCoordinate(p))
+      return Location.EXTERIOR;
 
     return locateInGeometry(p, geom);
   }
@@ -264,7 +266,8 @@ class SimplePointInAreaLocator implements PointOnGeometryLocator {
    */
   static int locatePointInRing(Coordinate p, LinearRing ring) {
     // short-circuit if point is not in ring envelope
-    if (!ring.getEnvelopeInternal().intersectsCoordinate(p)) return Location.EXTERIOR;
+    if (!ring.getEnvelopeInternal().intersectsCoordinate(p))
+      return Location.EXTERIOR;
     return PointLocation.locateInRing(p, ring.getCoordinates());
   }
 

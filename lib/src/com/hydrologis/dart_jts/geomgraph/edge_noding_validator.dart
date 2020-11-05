@@ -9,8 +9,7 @@ part of dart_jts;
  *
  * @see FastNodingValidator
  */
-class EdgeNodingValidator
-{
+class EdgeNodingValidator {
   /**
    * Checks whether the supplied {@link Edge}s
    * are correctly noded.
@@ -20,17 +19,15 @@ class EdgeNodingValidator
    * @throws TopologyException if the SegmentStrings are not correctly noded
    *
    */
-  static void checkValidStatic(List<Edge> edges)
-  {
+  static void checkValidStatic(List<Edge> edges) {
     EdgeNodingValidator validator = new EdgeNodingValidator(edges);
     validator.checkValid();
   }
 
-  static List toSegmentStrings(List edges)
-  {
+  static List toSegmentStrings(List edges) {
     // convert Edges to SegmentStrings
     List segStrings = [];
-    for (Iterator i = edges.iterator; i.moveNext(); ) {
+    for (Iterator i = edges.iterator; i.moveNext();) {
       Edge e = i.current as Edge;
       segStrings.add(new BasicSegmentString(e.getCoordinates(), e));
     }
@@ -44,8 +41,7 @@ class EdgeNodingValidator
    *
    * @param edges a collection of Edges.
    */
-  EdgeNodingValidator(List edges)
-  {
+  EdgeNodingValidator(List edges) {
     _nv = new FastNodingValidator(toSegmentStrings(edges));
   }
 
@@ -56,8 +52,7 @@ class EdgeNodingValidator
    * @throws TopologyException if the SegmentStrings are not correctly noded
    *
    */
-  void checkValid()
-  {
+  void checkValid() {
     _nv.checkValid();
   }
 }

@@ -171,8 +171,7 @@ class InputExtracter implements GeometryFilter {
  * @author mbdavis
  *
  */
-class UnaryUnionOp
-{
+class UnaryUnionOp {
   /**
    * Computes the geometric union of a {@link Collection}
    * of {@link Geometry}s.
@@ -181,8 +180,7 @@ class UnaryUnionOp
    * @return the union of the geometries,
    * or <code>null</code> if the input is empty
    */
-  static Geometry unionMulti(List<Geometry> geoms)
-  {
+  static Geometry unionMulti(List<Geometry> geoms) {
     UnaryUnionOp op = new UnaryUnionOp(geoms, null);
     return op.union();
   }
@@ -199,8 +197,8 @@ class UnaryUnionOp
    * @return the union of the geometries,
    * or an empty GEOMETRYCOLLECTION
    */
-  static Geometry unionMultiWithFactory(List<Geometry> geoms, GeometryFactory geomFact)
-  {
+  static Geometry unionMultiWithFactory(
+      List<Geometry> geoms, GeometryFactory geomFact) {
     UnaryUnionOp op = new UnaryUnionOp(geoms, geomFact);
     return op.union();
   }
@@ -213,8 +211,7 @@ class UnaryUnionOp
    * @return the union of the elements of the geometry
    * or an empty GEOMETRYCOLLECTION
    */
-  static Geometry unionSingle(Geometry geom)
-  {
+  static Geometry unionSingle(Geometry geom) {
     UnaryUnionOp op = new UnaryUnionOp([geom], null);
     return op.union();
   }
@@ -229,20 +226,16 @@ class UnaryUnionOp
    * @param geoms a collection of geometries
    * @param geomFact the geometry factory to use if the collection is empty
    */
-  UnaryUnionOp(List<Geometry> geoms, GeometryFactory geomFact)
-  {
+  UnaryUnionOp(List<Geometry> geoms, GeometryFactory geomFact) {
     _geomFact = geomFact;
     _extractMulti(geoms);
   }
 
-
-  void _extractMulti(List<Geometry> geoms)
-  {
+  void _extractMulti(List<Geometry> geoms) {
     _extracter = InputExtracter.extractMulti(geoms);
   }
 
-  void _extractSingle(Geometry geom)
-  {
+  void _extractSingle(Geometry geom) {
     _extracter = InputExtracter.extractSingle(geom);
   }
 
@@ -263,10 +256,8 @@ class UnaryUnionOp
    * or an empty atomic geometry, or an empty GEOMETRYCOLLECTION,
    * or <code>null</code> if no GeometryFactory was provided
    */
-  Geometry union()
-  {
-    if (_geomFact == null)
-      _geomFact = _extracter.getFactory();
+  Geometry union() {
+    if (_geomFact == null) _geomFact = _extracter.getFactory();
 
     // Case 3
     if (_geomFact == null) {
@@ -275,7 +266,7 @@ class UnaryUnionOp
 
     // Case 1 & 2
     if (_extracter.isEmpty()) {
-      return _geomFact.createEmpty(_extracter.getDimension() );
+      return _geomFact.createEmpty(_extracter.getDimension());
     }
     List points = _extracter.getExtract(0);
     List lines = _extracter.getExtract(1);
@@ -317,8 +308,7 @@ class UnaryUnionOp
     else
       union = PointGeometryUnion.unionStatic(unionPoints as Puntal, unionLA);
 
-    if (union == null)
-      return _geomFact.createGeometryCollection([]);
+    if (union == null) return _geomFact.createGeometryCollection([]);
 
     return union;
   }
@@ -332,15 +322,11 @@ class UnaryUnionOp
    * @return the union of the input(s)
    * or null if both inputs are null
    */
-  Geometry _unionWithNull(Geometry g0, Geometry g1)
-  {
-    if (g0 == null && g1 == null)
-      return null;
+  Geometry _unionWithNull(Geometry g0, Geometry g1) {
+    if (g0 == null && g1 == null) return null;
 
-    if (g1 == null)
-      return g0;
-    if (g0 == null)
-      return g1;
+    if (g1 == null) return g0;
+    if (g0 == null) return g1;
 
     return g0.unionOther(g1);
   }
@@ -357,10 +343,8 @@ class UnaryUnionOp
    * @param g0 a geometry
    * @return the union of the input geometry
    */
-  Geometry _unionNoOpt(Geometry g0)
-  {
+  Geometry _unionNoOpt(Geometry g0) {
     Geometry empty = _geomFact.createPointEmpty();
     return SnapIfNeededOverlayOp.overlayOp(g0, empty, OverlayOp.UNION);
   }
-
 }

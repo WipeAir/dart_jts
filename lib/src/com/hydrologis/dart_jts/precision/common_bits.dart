@@ -1,16 +1,11 @@
 part of dart_jts;
 
-
-class CommonBits
-{
-
-  static int signExpBits(int num)
-  {
+class CommonBits {
+  static int signExpBits(int num) {
     return num >> 52;
   }
 
-  static int numCommonMostSigMantissaBits(int num1, int num2)
-  {
+  static int numCommonMostSigMantissaBits(int num1, int num2) {
     int count = 0;
     for (int i = 52; i >= 0; i--) {
       if (getBit(num1, i) != getBit(num2, i)) {
@@ -21,30 +16,26 @@ class CommonBits
     return 52;
   }
 
-  static int zeroLowerBits(int bits, int nBits)
-  {
+  static int zeroLowerBits(int bits, int nBits) {
     int invMask = ((1 << nBits) - 1);
     int mask = (~invMask);
     int zeroed = (bits & mask);
     return zeroed;
   }
 
-  static int getBit(int bits, int i)
-  {
+  static int getBit(int bits, int i) {
     int mask = (1 << i);
     return ((bits & mask) != 0) ? 1 : 0;
   }
+
   bool isFirst = true;
   int commonMantissaBitsCount = 53;
   int commonBits = 0;
   int commonSignExp;
 
-  CommonBits()
-  {
-  }
+  CommonBits() {}
 
-  void add(double num)
-  {
+  void add(double num) {
     // final data = ByteData(8)..setFloat64(0,, num);
     final data = ByteData(8);
     data.setFloat64(0, num);
@@ -66,16 +57,14 @@ class CommonBits
     commonBits = zeroLowerBits(commonBits, 64 - (12 + commonMantissaBitsCount));
   }
 
-  double getCommon()
-  {
+  double getCommon() {
     final data = ByteData(8);
     data.setInt64(0, commonBits);
 
     return data.getFloat64(0);
   }
 
-  String toStringBits(int bits)
-  {
+  String toStringBits(int bits) {
     /*double x = Double.longBitsToDouble(bits);
     String numStr = Long.toBinaryString(bits);
     String padStr = ("0000000000000000000000000000000000000000000000000000000000000000" + numStr);

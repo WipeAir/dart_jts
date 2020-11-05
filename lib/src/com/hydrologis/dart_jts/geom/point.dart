@@ -28,15 +28,20 @@ class Point extends Geometry implements Puntal {
    *      <code>Point</code>
    * @deprecated Use GeometryFactory instead
    */
-  Point(Coordinate coordinate, PrecisionModel precisionModel, int SRID) : super(new GeometryFactory.withPrecisionModelSrid(precisionModel, SRID)) {
-    init(getFactory().getCoordinateSequenceFactory().create(coordinate != null ? [coordinate] : []));
+  Point(Coordinate coordinate, PrecisionModel precisionModel, int SRID)
+      : super(
+            new GeometryFactory.withPrecisionModelSrid(precisionModel, SRID)) {
+    init(getFactory()
+        .getCoordinateSequenceFactory()
+        .create(coordinate != null ? [coordinate] : []));
   }
 
   /**
    *@param  coordinates      contains the single coordinate on which to base this <code>Point</code>
    *      , or <code>null</code> to create the empty geometry.
    */
-  Point.fromSequence(CoordinateSequence coordinates, GeometryFactory factory) : super(factory) {
+  Point.fromSequence(CoordinateSequence coordinates, GeometryFactory factory)
+      : super(factory) {
     init(coordinates);
   }
 
@@ -125,7 +130,8 @@ class Point extends Geometry implements Puntal {
     if (isEmpty() != other.isEmpty()) {
       return false;
     }
-    return equal((other as Point).getCoordinate(), this.getCoordinate(), tolerance);
+    return equal(
+        (other as Point).getCoordinate(), this.getCoordinate(), tolerance);
   }
 
   void applyCF(CoordinateFilter cf) {
@@ -177,7 +183,8 @@ class Point extends Geometry implements Puntal {
     return getCoordinate().compareTo(point.getCoordinate());
   }
 
-  int compareToSameClassWithComparator(Object other, Comparator<CoordinateSequence> comp) {
+  int compareToSameClassWithComparator(
+      Object other, Comparator<CoordinateSequence> comp) {
     Point point = other as Point;
     return comp(this.coordinates, point.coordinates);
   }

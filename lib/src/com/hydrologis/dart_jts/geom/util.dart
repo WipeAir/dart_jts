@@ -251,15 +251,24 @@ class IntersectionMatrix {
   ///@param  other  an <code>IntersectionMatrix</code> to copy
   IntersectionMatrix.fromMatrix(IntersectionMatrix other) {
     _init();
-    matrix[Location.INTERIOR][Location.INTERIOR] = other.matrix[Location.INTERIOR][Location.INTERIOR];
-    matrix[Location.INTERIOR][Location.BOUNDARY] = other.matrix[Location.INTERIOR][Location.BOUNDARY];
-    matrix[Location.INTERIOR][Location.EXTERIOR] = other.matrix[Location.INTERIOR][Location.EXTERIOR];
-    matrix[Location.BOUNDARY][Location.INTERIOR] = other.matrix[Location.BOUNDARY][Location.INTERIOR];
-    matrix[Location.BOUNDARY][Location.BOUNDARY] = other.matrix[Location.BOUNDARY][Location.BOUNDARY];
-    matrix[Location.BOUNDARY][Location.EXTERIOR] = other.matrix[Location.BOUNDARY][Location.EXTERIOR];
-    matrix[Location.EXTERIOR][Location.INTERIOR] = other.matrix[Location.EXTERIOR][Location.INTERIOR];
-    matrix[Location.EXTERIOR][Location.BOUNDARY] = other.matrix[Location.EXTERIOR][Location.BOUNDARY];
-    matrix[Location.EXTERIOR][Location.EXTERIOR] = other.matrix[Location.EXTERIOR][Location.EXTERIOR];
+    matrix[Location.INTERIOR][Location.INTERIOR] =
+        other.matrix[Location.INTERIOR][Location.INTERIOR];
+    matrix[Location.INTERIOR][Location.BOUNDARY] =
+        other.matrix[Location.INTERIOR][Location.BOUNDARY];
+    matrix[Location.INTERIOR][Location.EXTERIOR] =
+        other.matrix[Location.INTERIOR][Location.EXTERIOR];
+    matrix[Location.BOUNDARY][Location.INTERIOR] =
+        other.matrix[Location.BOUNDARY][Location.INTERIOR];
+    matrix[Location.BOUNDARY][Location.BOUNDARY] =
+        other.matrix[Location.BOUNDARY][Location.BOUNDARY];
+    matrix[Location.BOUNDARY][Location.EXTERIOR] =
+        other.matrix[Location.BOUNDARY][Location.EXTERIOR];
+    matrix[Location.EXTERIOR][Location.INTERIOR] =
+        other.matrix[Location.EXTERIOR][Location.INTERIOR];
+    matrix[Location.EXTERIOR][Location.BOUNDARY] =
+        other.matrix[Location.EXTERIOR][Location.BOUNDARY];
+    matrix[Location.EXTERIOR][Location.EXTERIOR] =
+        other.matrix[Location.EXTERIOR][Location.EXTERIOR];
   }
 
   /// Adds one matrix to another.
@@ -297,23 +306,29 @@ class IntersectionMatrix {
   ///      are <code>{T, F, * , 0, 1, 2}</code>.
   ///@return                          true if the dimension symbol matches
   ///      the dimension value
-  static bool matchesDimValue(int actualDimensionValue, String requiredDimensionSymbol) {
+  static bool matchesDimValue(
+      int actualDimensionValue, String requiredDimensionSymbol) {
     if (requiredDimensionSymbol == Dimension.SYM_DONTCARE) {
       return true;
     }
-    if (requiredDimensionSymbol == Dimension.SYM_TRUE && (actualDimensionValue >= 0 || actualDimensionValue == Dimension.TRUE)) {
+    if (requiredDimensionSymbol == Dimension.SYM_TRUE &&
+        (actualDimensionValue >= 0 || actualDimensionValue == Dimension.TRUE)) {
       return true;
     }
-    if (requiredDimensionSymbol == Dimension.SYM_FALSE && actualDimensionValue == Dimension.FALSE) {
+    if (requiredDimensionSymbol == Dimension.SYM_FALSE &&
+        actualDimensionValue == Dimension.FALSE) {
       return true;
     }
-    if (requiredDimensionSymbol == Dimension.SYM_P && actualDimensionValue == Dimension.P) {
+    if (requiredDimensionSymbol == Dimension.SYM_P &&
+        actualDimensionValue == Dimension.P) {
       return true;
     }
-    if (requiredDimensionSymbol == Dimension.SYM_L && actualDimensionValue == Dimension.L) {
+    if (requiredDimensionSymbol == Dimension.SYM_L &&
+        actualDimensionValue == Dimension.L) {
       return true;
     }
-    if (requiredDimensionSymbol == Dimension.SYM_A && actualDimensionValue == Dimension.A) {
+    if (requiredDimensionSymbol == Dimension.SYM_A &&
+        actualDimensionValue == Dimension.A) {
       return true;
     }
     return false;
@@ -328,8 +343,10 @@ class IntersectionMatrix {
   ///      against. Possible values are <code>{T, F, * , 0, 1, 2}</code>.
   ///@return                           true if each of the required dimension
   ///      symbols encompass the corresponding actual dimension symbol
-  static bool matchesDimSymbols(String actualDimensionSymbols, String requiredDimensionSymbols) {
-    IntersectionMatrix m = IntersectionMatrix.fromDimensionSymbols(actualDimensionSymbols);
+  static bool matchesDimSymbols(
+      String actualDimensionSymbols, String requiredDimensionSymbols) {
+    IntersectionMatrix m =
+        IntersectionMatrix.fromDimensionSymbols(actualDimensionSymbols);
     return m.matches(requiredDimensionSymbols);
   }
 
@@ -402,7 +419,8 @@ class IntersectionMatrix {
     for (int i = 0; i < minimumDimensionSymbols.length; i++) {
       int row = (i / 3).floor();
       int col = i % 3;
-      setAtLeast(row, col, Dimension.toDimensionValue(minimumDimensionSymbols[i]));
+      setAtLeast(
+          row, col, Dimension.toDimensionValue(minimumDimensionSymbols[i]));
     }
   }
 
@@ -469,11 +487,16 @@ class IntersectionMatrix {
       //no need to get transpose because pattern matrix is symmetrical
       return isTouches(dimensionOfGeometryB, dimensionOfGeometryA);
     }
-    if ((dimensionOfGeometryA == Dimension.A && dimensionOfGeometryB == Dimension.A) ||
-        (dimensionOfGeometryA == Dimension.L && dimensionOfGeometryB == Dimension.L) ||
-        (dimensionOfGeometryA == Dimension.L && dimensionOfGeometryB == Dimension.A) ||
-        (dimensionOfGeometryA == Dimension.P && dimensionOfGeometryB == Dimension.A) ||
-        (dimensionOfGeometryA == Dimension.P && dimensionOfGeometryB == Dimension.L)) {
+    if ((dimensionOfGeometryA == Dimension.A &&
+            dimensionOfGeometryB == Dimension.A) ||
+        (dimensionOfGeometryA == Dimension.L &&
+            dimensionOfGeometryB == Dimension.L) ||
+        (dimensionOfGeometryA == Dimension.L &&
+            dimensionOfGeometryB == Dimension.A) ||
+        (dimensionOfGeometryA == Dimension.P &&
+            dimensionOfGeometryB == Dimension.A) ||
+        (dimensionOfGeometryA == Dimension.P &&
+            dimensionOfGeometryB == Dimension.L)) {
       return matrix[Location.INTERIOR][Location.INTERIOR] == Dimension.FALSE &&
           (isTrue(matrix[Location.INTERIOR][Location.BOUNDARY]) ||
               isTrue(matrix[Location.BOUNDARY][Location.INTERIOR]) ||
@@ -506,17 +529,26 @@ class IntersectionMatrix {
   ///@return                       <code>true</code> if the two <code>Geometry</code>s
   ///      related by this <code>IntersectionMatrix</code> cross.
   bool isCrosses(int dimensionOfGeometryA, int dimensionOfGeometryB) {
-    if ((dimensionOfGeometryA == Dimension.P && dimensionOfGeometryB == Dimension.L) ||
-        (dimensionOfGeometryA == Dimension.P && dimensionOfGeometryB == Dimension.A) ||
-        (dimensionOfGeometryA == Dimension.L && dimensionOfGeometryB == Dimension.A)) {
-      return isTrue(matrix[Location.INTERIOR][Location.INTERIOR]) && isTrue(matrix[Location.INTERIOR][Location.EXTERIOR]);
+    if ((dimensionOfGeometryA == Dimension.P &&
+            dimensionOfGeometryB == Dimension.L) ||
+        (dimensionOfGeometryA == Dimension.P &&
+            dimensionOfGeometryB == Dimension.A) ||
+        (dimensionOfGeometryA == Dimension.L &&
+            dimensionOfGeometryB == Dimension.A)) {
+      return isTrue(matrix[Location.INTERIOR][Location.INTERIOR]) &&
+          isTrue(matrix[Location.INTERIOR][Location.EXTERIOR]);
     }
-    if ((dimensionOfGeometryA == Dimension.L && dimensionOfGeometryB == Dimension.P) ||
-        (dimensionOfGeometryA == Dimension.A && dimensionOfGeometryB == Dimension.P) ||
-        (dimensionOfGeometryA == Dimension.A && dimensionOfGeometryB == Dimension.L)) {
-      return isTrue(matrix[Location.INTERIOR][Location.INTERIOR]) && isTrue(matrix[Location.EXTERIOR][Location.INTERIOR]);
+    if ((dimensionOfGeometryA == Dimension.L &&
+            dimensionOfGeometryB == Dimension.P) ||
+        (dimensionOfGeometryA == Dimension.A &&
+            dimensionOfGeometryB == Dimension.P) ||
+        (dimensionOfGeometryA == Dimension.A &&
+            dimensionOfGeometryB == Dimension.L)) {
+      return isTrue(matrix[Location.INTERIOR][Location.INTERIOR]) &&
+          isTrue(matrix[Location.EXTERIOR][Location.INTERIOR]);
     }
-    if (dimensionOfGeometryA == Dimension.L && dimensionOfGeometryB == Dimension.L) {
+    if (dimensionOfGeometryA == Dimension.L &&
+        dimensionOfGeometryB == Dimension.L) {
       return matrix[Location.INTERIOR][Location.INTERIOR] == 0;
     }
     return false;
@@ -553,10 +585,11 @@ class IntersectionMatrix {
   ///@return    <code>true</code> if the first <code>Geometry</code> covers the
   ///      second
   bool isCovers() {
-    bool hasPointInCommon = isTrue(matrix[Location.INTERIOR][Location.INTERIOR]) ||
-        isTrue(matrix[Location.INTERIOR][Location.BOUNDARY]) ||
-        isTrue(matrix[Location.BOUNDARY][Location.INTERIOR]) ||
-        isTrue(matrix[Location.BOUNDARY][Location.BOUNDARY]);
+    bool hasPointInCommon =
+        isTrue(matrix[Location.INTERIOR][Location.INTERIOR]) ||
+            isTrue(matrix[Location.INTERIOR][Location.BOUNDARY]) ||
+            isTrue(matrix[Location.BOUNDARY][Location.INTERIOR]) ||
+            isTrue(matrix[Location.BOUNDARY][Location.BOUNDARY]);
 
     return hasPointInCommon &&
         matrix[Location.EXTERIOR][Location.INTERIOR] == Dimension.FALSE &&
@@ -572,10 +605,11 @@ class IntersectionMatrix {
   ///@return    <code>true</code> if the first <code>Geometry</code>
   /// is covered by the second
   bool isCoveredBy() {
-    bool hasPointInCommon = isTrue(matrix[Location.INTERIOR][Location.INTERIOR]) ||
-        isTrue(matrix[Location.INTERIOR][Location.BOUNDARY]) ||
-        isTrue(matrix[Location.BOUNDARY][Location.INTERIOR]) ||
-        isTrue(matrix[Location.BOUNDARY][Location.BOUNDARY]);
+    bool hasPointInCommon =
+        isTrue(matrix[Location.INTERIOR][Location.INTERIOR]) ||
+            isTrue(matrix[Location.INTERIOR][Location.BOUNDARY]) ||
+            isTrue(matrix[Location.BOUNDARY][Location.INTERIOR]) ||
+            isTrue(matrix[Location.BOUNDARY][Location.BOUNDARY]);
 
     return hasPointInCommon &&
         matrix[Location.INTERIOR][Location.EXTERIOR] == Dimension.FALSE &&
@@ -622,13 +656,16 @@ class IntersectionMatrix {
   ///      function to return <code>true</code>, the <code>Geometry</code>s must
   ///      be two points, two curves or two surfaces.
   bool isOverlaps(int dimensionOfGeometryA, int dimensionOfGeometryB) {
-    if ((dimensionOfGeometryA == Dimension.P && dimensionOfGeometryB == Dimension.P) ||
-        (dimensionOfGeometryA == Dimension.A && dimensionOfGeometryB == Dimension.A)) {
+    if ((dimensionOfGeometryA == Dimension.P &&
+            dimensionOfGeometryB == Dimension.P) ||
+        (dimensionOfGeometryA == Dimension.A &&
+            dimensionOfGeometryB == Dimension.A)) {
       return isTrue(matrix[Location.INTERIOR][Location.INTERIOR]) &&
           isTrue(matrix[Location.INTERIOR][Location.EXTERIOR]) &&
           isTrue(matrix[Location.EXTERIOR][Location.INTERIOR]);
     }
-    if (dimensionOfGeometryA == Dimension.L && dimensionOfGeometryB == Dimension.L) {
+    if (dimensionOfGeometryA == Dimension.L &&
+        dimensionOfGeometryB == Dimension.L) {
       return matrix[Location.INTERIOR][Location.INTERIOR] == 1 &&
           isTrue(matrix[Location.INTERIOR][Location.EXTERIOR]) &&
           isTrue(matrix[Location.EXTERIOR][Location.INTERIOR]);
@@ -650,7 +687,8 @@ class IntersectionMatrix {
     }
     for (int ai = 0; ai < 3; ai++) {
       for (int bi = 0; bi < 3; bi++) {
-        if (!matchesDimValue(matrix[ai][bi], requiredDimensionSymbols[3 * ai + bi])) {
+        if (!matchesDimValue(
+            matrix[ai][bi], requiredDimensionSymbols[3 * ai + bi])) {
           return false;
         }
       }
@@ -683,7 +721,8 @@ class IntersectionMatrix {
     String base = "123456789";
     for (int ai = 0; ai < 3; ai++) {
       for (int bi = 0; bi < 3; bi++) {
-        base = StringUtils.replaceCharAt(base, 3 * ai + bi, Dimension.toDimensionSymbol(matrix[ai][bi]));
+        base = StringUtils.replaceCharAt(
+            base, 3 * ai + bi, Dimension.toDimensionSymbol(matrix[ai][bi]));
       }
     }
     return base;
@@ -1257,7 +1296,8 @@ class PrecisionModel implements Comparable {
       return false;
     }
     PrecisionModel otherPrecisionModel = other;
-    return modelType == otherPrecisionModel.modelType && scale == otherPrecisionModel.scale;
+    return modelType == otherPrecisionModel.modelType &&
+        scale == otherPrecisionModel.scale;
   }
 
   ///  Compares this {@link PrecisionModel} object with the specified object for order.
@@ -1396,7 +1436,8 @@ class LinearComponentExtracter implements GeometryComponentFilter {
    * @return the List of linear components (LineStrings or LinearRings)
    */
   static List getLinesGLF(Geometry geom, List lines, bool forceToLineString) {
-    geom.applyGCF(new LinearComponentExtracter.withForced(lines, forceToLineString));
+    geom.applyGCF(
+        new LinearComponentExtracter.withForced(lines, forceToLineString));
     return lines;
   }
 
@@ -1425,7 +1466,8 @@ class LinearComponentExtracter implements GeometryComponentFilter {
    */
   static List getLinesGF(Geometry geom, bool forceToLineString) {
     List lines = [];
-    geom.applyGCF(new LinearComponentExtracter.withForced(lines, forceToLineString));
+    geom.applyGCF(
+        new LinearComponentExtracter.withForced(lines, forceToLineString));
     return lines;
   }
 
@@ -1482,7 +1524,9 @@ class LinearComponentExtracter implements GeometryComponentFilter {
 
   void filter(Geometry geom) {
     if (isForcedToLineString && geom is LinearRing) {
-      LineString line = geom.getFactory().createLineStringSeq((geom as LinearRing).getCoordinateSequence());
+      LineString line = geom
+          .getFactory()
+          .createLineStringSeq((geom as LinearRing).getCoordinateSequence());
       lines.add(line);
       return;
     }
@@ -1699,7 +1743,8 @@ class GeometryEditor {
       return operation.edit(geometry, _geomFactory);
     }
 
-    Assert.shouldNeverReachHere("Unsupported Geometry class: ${geometry.runtimeType.toString()}");
+    Assert.shouldNeverReachHere(
+        "Unsupported Geometry class: ${geometry.runtimeType.toString()}");
     return null;
   }
 
@@ -1712,7 +1757,8 @@ class GeometryEditor {
       return newPolygon;
     }
 
-    LinearRing shell = edit(newPolygon.getExteriorRing(), operation) as LinearRing;
+    LinearRing shell =
+        edit(newPolygon.getExteriorRing(), operation) as LinearRing;
     if (shell == null || shell.isEmpty()) {
       //RemoveSelectedPlugIn relies on this behaviour. [Jon Aquino]
       return _geomFactory.createPolygonEmpty();
@@ -1720,7 +1766,8 @@ class GeometryEditor {
 
     List<LinearRing> holes = [];
     for (int i = 0; i < newPolygon.getNumInteriorRing(); i++) {
-      LinearRing hole = edit(newPolygon.getInteriorRingN(i), operation) as LinearRing;
+      LinearRing hole =
+          edit(newPolygon.getInteriorRingN(i), operation) as LinearRing;
       if (hole == null || hole.isEmpty()) {
         continue;
       }
@@ -1730,10 +1777,12 @@ class GeometryEditor {
     return _geomFactory.createPolygon(shell, holes);
   }
 
-  GeometryCollection editGeometryCollection(GeometryCollection collection, GeometryEditorOperation operation) {
+  GeometryCollection editGeometryCollection(
+      GeometryCollection collection, GeometryEditorOperation operation) {
     // first edit the entire collection
     // MD - not sure why this is done - could just check original collection?
-    GeometryCollection collectionForType = operation.edit(collection, _geomFactory) as GeometryCollection;
+    GeometryCollection collectionForType =
+        operation.edit(collection, _geomFactory) as GeometryCollection;
 
     // edit the component geometries
     List geometries = [];
@@ -1804,17 +1853,21 @@ class NoOpGeometryOperation implements GeometryEditorOperation {
 abstract class CoordinateOperation implements GeometryEditorOperation {
   Geometry edit(Geometry geometry, GeometryFactory gfactory) {
     if (geometry is LinearRing) {
-      return gfactory.createLinearRing(editCoords(geometry.getCoordinates(), geometry));
+      return gfactory
+          .createLinearRing(editCoords(geometry.getCoordinates(), geometry));
     }
 
     if (geometry is LineString) {
-      return gfactory.createLineString(editCoords(geometry.getCoordinates(), geometry));
+      return gfactory
+          .createLineString(editCoords(geometry.getCoordinates(), geometry));
     }
 
     if (geometry is Point) {
-      List<Coordinate> newCoordinates = editCoords(geometry.getCoordinates(), geometry);
+      List<Coordinate> newCoordinates =
+          editCoords(geometry.getCoordinates(), geometry);
 
-      return gfactory.createPoint((newCoordinates.length > 0) ? newCoordinates[0] : null);
+      return gfactory
+          .createPoint((newCoordinates.length > 0) ? newCoordinates[0] : null);
     }
 
     return geometry;
@@ -1842,15 +1895,18 @@ abstract class CoordinateOperation implements GeometryEditorOperation {
 abstract class CoordinateSequenceOperation implements GeometryEditorOperation {
   Geometry edit(Geometry geometry, GeometryFactory gfactory) {
     if (geometry is LinearRing) {
-      return gfactory.createLinearRingSeq(editSeq((geometry as LinearRing).getCoordinateSequence(), geometry));
+      return gfactory.createLinearRingSeq(
+          editSeq((geometry as LinearRing).getCoordinateSequence(), geometry));
     }
 
     if (geometry is LineString) {
-      return gfactory.createLineStringSeq(editSeq((geometry as LineString).getCoordinateSequence(), geometry));
+      return gfactory.createLineStringSeq(
+          editSeq((geometry as LineString).getCoordinateSequence(), geometry));
     }
 
     if (geometry is Point) {
-      return gfactory.createPointSeq(editSeq((geometry as Point).getCoordinateSequence(), geometry));
+      return gfactory.createPointSeq(
+          editSeq((geometry as Point).getCoordinateSequence(), geometry));
     }
 
     return geometry;
@@ -1866,64 +1922,56 @@ abstract class CoordinateSequenceOperation implements GeometryEditorOperation {
   CoordinateSequence editSeq(CoordinateSequence coordSeq, Geometry geometry);
 }
 
-class GeometryCombiner
-{
-  static Geometry combine1(List geoms)
-  {
+class GeometryCombiner {
+  static Geometry combine1(List geoms) {
     GeometryCombiner combiner = new GeometryCombiner(geoms);
     return combiner.combine();
   }
 
-  static Geometry combine2(Geometry g0, Geometry g1)
-  {
+  static Geometry combine2(Geometry g0, Geometry g1) {
     GeometryCombiner combiner = GeometryCombiner(createList2(g0, g1));
     return combiner.combine();
   }
 
-  static Geometry combine3(Geometry g0, Geometry g1, Geometry g2)
-  {
+  static Geometry combine3(Geometry g0, Geometry g1, Geometry g2) {
     GeometryCombiner combiner = GeometryCombiner(createList3(g0, g1, g2));
     return combiner.combine();
   }
 
-  static List createList2(Object obj0, Object obj1)
-  {
+  static List createList2(Object obj0, Object obj1) {
     List list = [];
     list.add(obj0);
     list.add(obj1);
     return list;
   }
 
-  static List createList3(Object obj0, Object obj1, Object obj2)
-  {
+  static List createList3(Object obj0, Object obj1, Object obj2) {
     List list = [];
     list.add(obj0);
     list.add(obj1);
     list.add(obj2);
     return list;
   }
+
   GeometryFactory geomFactory;
   bool skipEmpty = false;
   List inputGeoms;
 
-  GeometryCombiner(List geoms)
-  {
+  GeometryCombiner(List geoms) {
     geomFactory = extractFactory(geoms);
     this.inputGeoms = geoms;
   }
 
-  static GeometryFactory extractFactory(List geoms)
-  {
+  static GeometryFactory extractFactory(List geoms) {
     if (geoms.isEmpty) {
       return null;
     }
     return geoms.first.getFactory();
   }
 
-  Geometry combine()
-  {
+  Geometry combine() {
     List elems = [];
-    for (Iterator i = inputGeoms.iterator; i.moveNext(); ) {
+    for (Iterator i = inputGeoms.iterator; i.moveNext();) {
       Geometry g = i.current;
       extractElements(g, elems);
     }
@@ -1936,8 +1984,7 @@ class GeometryCombiner
     return geomFactory.buildGeometry(elems);
   }
 
-  void extractElements(Geometry geom, List elems)
-  {
+  void extractElements(Geometry geom, List elems) {
     if (geom == null) {
       return;
     }

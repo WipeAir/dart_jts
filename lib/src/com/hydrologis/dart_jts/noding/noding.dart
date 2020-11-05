@@ -60,7 +60,8 @@ class OrientedCoordinateArray implements Comparable {
     return comp;
   }
 
-  static int compareOriented(List<Coordinate> pts1, bool orientation1, List<Coordinate> pts2, bool orientation2) {
+  static int compareOriented(List<Coordinate> pts1, bool orientation1,
+      List<Coordinate> pts2, bool orientation2) {
     int dir1 = orientation1 ? 1 : -1;
     int dir2 = orientation2 ? 1 : -1;
     int limit1 = orientation1 ? pts1.length : -1;
@@ -130,7 +131,8 @@ class MCIndexSnapRounder implements Noder {
   }
 
   void checkCorrectness(List inputSegmentStrings) {
-    List resultSegStrings = NodedSegmentString.getNodedSubstrings(inputSegmentStrings);
+    List resultSegStrings =
+        NodedSegmentString.getNodedSubstrings(inputSegmentStrings);
     NodingValidator nv = new NodingValidator(resultSegStrings);
     try {
       nv.checkValid();
@@ -154,7 +156,8 @@ class MCIndexSnapRounder implements Noder {
    * @return a list of Coordinates for the intersections
    */
   List findInteriorIntersections(List segStrings, LineIntersector li) {
-    InteriorIntersectionFinderAdder intFinderAdder = new InteriorIntersectionFinderAdder(li);
+    InteriorIntersectionFinderAdder intFinderAdder =
+        new InteriorIntersectionFinderAdder(li);
     noder.setSegmentIntersector(intFinderAdder);
     noder.computeNodes(segStrings);
     return intFinderAdder.getInteriorIntersections();
@@ -262,7 +265,8 @@ class MCIndexNoder extends SinglePassNoder {
   }
 
   void add(SegmentString segStr) {
-    List segChains = MonotoneChainBuilder.getChainsWithContext(segStr.getCoordinates(), segStr);
+    List segChains = MonotoneChainBuilder.getChainsWithContext(
+        segStr.getCoordinates(), segStr);
     for (MonotoneChainI mc in segChains) {
       mc.setId(idCounter++);
       index.insert(mc.getEnvelope(), mc);
@@ -304,7 +308,8 @@ abstract class SegmentIntersectorN {
    * of the {@link SegmentIntersector} interface to process
    * intersections for two segments of the {@link SegmentString}s being intersected.
    */
-  void processIntersections(SegmentString e0, int segIndex0, SegmentString e1, int segIndex1);
+  void processIntersections(
+      SegmentString e0, int segIndex0, SegmentString e1, int segIndex1);
 
   /**
    * Reports whether the client of this class
@@ -449,11 +454,14 @@ class MCIndexPointSnapper {
    * @param hotPixelVertexIndex the index of the hotPixel vertex, if applicable, or -1
    * @return <code>true</code> if a node was added for this pixel
    */
-  bool snap(HotPixel hotPixel, SegmentString parentEdge, int hotPixelVertexIndex) {
+  bool snap(
+      HotPixel hotPixel, SegmentString parentEdge, int hotPixelVertexIndex) {
     final Envelope pixelEnv = hotPixel.getSafeEnvelope();
-    final HotPixelSnapAction hotPixelSnapAction = new HotPixelSnapAction(hotPixel, parentEdge, hotPixelVertexIndex);
+    final HotPixelSnapAction hotPixelSnapAction =
+        new HotPixelSnapAction(hotPixel, parentEdge, hotPixelVertexIndex);
 
-    index.queryWithVisitor(pixelEnv, MonotoneChainIVisitor(pixelEnv, hotPixelSnapAction));
+    index.queryWithVisitor(
+        pixelEnv, MonotoneChainIVisitor(pixelEnv, hotPixelSnapAction));
     return hotPixelSnapAction.isNodeAdded();
   }
 
@@ -487,7 +495,8 @@ class HotPixelSnapAction extends MonotoneChainSelectAction {
   int hotPixelVertexIndex;
   bool _isNodeAdded = false;
 
-  HotPixelSnapAction(HotPixel hotPixel, SegmentString parentEdge, int hotPixelVertexIndex) {
+  HotPixelSnapAction(
+      HotPixel hotPixel, SegmentString parentEdge, int hotPixelVertexIndex) {
     this.hotPixel = hotPixel;
     this.parentEdge = parentEdge;
     this.hotPixelVertexIndex = hotPixelVertexIndex;
@@ -525,7 +534,8 @@ class HotPixelSnapAction extends MonotoneChainSelectAction {
      */
     if (parentEdge == ss) {
 // exit if hotpixel is equal to endpoint of target segment
-      if (startIndex == hotPixelVertexIndex || startIndex + 1 == hotPixelVertexIndex) return;
+      if (startIndex == hotPixelVertexIndex ||
+          startIndex + 1 == hotPixelVertexIndex) return;
     }
 // snap and record if a node was created
     _isNodeAdded |= hotPixel.addSnappedNode(ss, startIndex);
@@ -617,7 +627,11 @@ class HotPixel {
   Envelope getSafeEnvelope() {
     if (safeEnv == null) {
       double safeTolerance = SAFE_ENV_EXPANSION_FACTOR / scaleFactor;
-      safeEnv = new Envelope(originalPt.x - safeTolerance, originalPt.x + safeTolerance, originalPt.y - safeTolerance, originalPt.y + safeTolerance);
+      safeEnv = new Envelope(
+          originalPt.x - safeTolerance,
+          originalPt.x + safeTolerance,
+          originalPt.y - safeTolerance,
+          originalPt.y + safeTolerance);
     }
     return safeEnv;
   }
@@ -666,7 +680,8 @@ class HotPixel {
     double segMiny = math.min(p0.y, p1.y);
     double segMaxy = math.max(p0.y, p1.y);
 
-    bool isOutsidePixelEnv = maxx < segMinx || minx > segMaxx || maxy < segMiny || miny > segMaxy;
+    bool isOutsidePixelEnv =
+        maxx < segMinx || minx > segMaxx || maxy < segMiny || miny > segMaxy;
     if (isOutsidePixelEnv) return false;
     bool intersects = intersectsToleranceSquare(p0, p1);
 //    bool intersectsPixelClosure = intersectsPixelClosure(p0, p1);
@@ -688,7 +703,8 @@ class HotPixel {
     }
 */
 
-    Assert.isTrue(!(isOutsidePixelEnv && intersects), "Found bad envelope test");
+    Assert.isTrue(
+        !(isOutsidePixelEnv && intersects), "Found bad envelope test");
 //    if (isOutsideEnv && intersects) {
 //      Debug.println("Found bad envelope test");
 //    }
@@ -917,8 +933,10 @@ class NodedSegmentString implements NodableSegmentString {
    * of the SegmentString is normalized
    * to use the higher of the two possible segmentIndexes
    */
-  void addIntersectionLI(LineIntersector li, int segmentIndex, int geomIndex, int intIndex) {
-    Coordinate intPt = new Coordinate.fromCoordinate(li.getIntersection(intIndex));
+  void addIntersectionLI(
+      LineIntersector li, int segmentIndex, int geomIndex, int intIndex) {
+    Coordinate intPt =
+        new Coordinate.fromCoordinate(li.getIntersection(intIndex));
     addIntersection(intPt, segmentIndex);
   }
 
@@ -997,7 +1015,8 @@ class SegmentNode implements Comparable<SegmentNode> {
   int segmentOctant;
   bool _isInterior;
 
-  SegmentNode(NodedSegmentString segString, Coordinate coord, int segmentIndex, int segmentOctant) {
+  SegmentNode(NodedSegmentString segString, Coordinate coord, int segmentIndex,
+      int segmentOctant) {
     this.segString = segString;
     this.coord = new Coordinate.fromCoordinate(coord);
     this.segmentIndex = segmentIndex;
@@ -1139,11 +1158,13 @@ class SegmentNodeList {
    * @return the SegmentIntersection found or added
    */
   SegmentNode add(Coordinate intPt, int segmentIndex) {
-    SegmentNode eiNew = new SegmentNode(edge, intPt, segmentIndex, edge.getSegmentOctant(segmentIndex));
+    SegmentNode eiNew = new SegmentNode(
+        edge, intPt, segmentIndex, edge.getSegmentOctant(segmentIndex));
     SegmentNode ei = nodeMap[eiNew];
     if (ei != null) {
       // debugging sanity check
-      Assert.isTrue(ei.coord.equals2D(intPt), "Found equal nodes with different coordinates");
+      Assert.isTrue(ei.coord.equals2D(intPt),
+          "Found equal nodes with different coordinates");
 //      if (! ei.coord.equals2D(intPt))
 //        Debug.println("Found equal nodes with different coordinates");
 
@@ -1228,7 +1249,8 @@ class SegmentNodeList {
     }
   }
 
-  bool findCollapseIndex(SegmentNode ei0, SegmentNode ei1, List<int> collapsedVertexIndex) {
+  bool findCollapseIndex(
+      SegmentNode ei0, SegmentNode ei1, List<int> collapsedVertexIndex) {
     // only looking for equal nodes
     if (!ei0.coord.equals2D(ei1.coord)) return false;
 
@@ -1285,12 +1307,16 @@ class SegmentNodeList {
     // check that first and last points of split edges are same as endpoints of edge
     SegmentString split0 = splitEdges[0];
     Coordinate pt0 = split0.getCoordinate(0);
-    if (!pt0.equals2D(edgePts[0])) throw new RuntimeException("bad split edge start point at " + pt0.toString());
+    if (!pt0.equals2D(edgePts[0]))
+      throw new RuntimeException(
+          "bad split edge start point at " + pt0.toString());
 
     SegmentString splitn = splitEdges[splitEdges.length - 1];
     List<Coordinate> splitnPts = splitn.getCoordinates();
     Coordinate ptn = splitnPts[splitnPts.length - 1];
-    if (!ptn.equals2D(edgePts[edgePts.length - 1])) throw new RuntimeException("bad split edge end point at " + ptn.toString());
+    if (!ptn.equals2D(edgePts[edgePts.length - 1]))
+      throw new RuntimeException(
+          "bad split edge end point at " + ptn.toString());
   }
 
   /**
@@ -1318,7 +1344,11 @@ class SegmentNodeList {
     int npts = ei1.segmentIndex - ei0.segmentIndex + 2;
 
     // if only two points in split edge they must be the node points
-    if (npts == 2) return [new Coordinate.fromCoordinate(ei0.coord), new Coordinate.fromCoordinate(ei1.coord)];
+    if (npts == 2)
+      return [
+        new Coordinate.fromCoordinate(ei0.coord),
+        new Coordinate.fromCoordinate(ei1.coord)
+      ];
 
     Coordinate lastSegStartPt = edge.getCoordinate(ei1.segmentIndex);
     /**
@@ -1370,7 +1400,8 @@ class SegmentNodeList {
     return coordList.toCoordinateArray();
   }
 
-  void addEdgeCoordinates(SegmentNode ei0, SegmentNode ei1, CoordinateList coordList) {
+  void addEdgeCoordinates(
+      SegmentNode ei0, SegmentNode ei1, CoordinateList coordList) {
     List<Coordinate> pts = createSplitEdgePts(ei0, ei1);
     coordList.addList(pts, false);
   }
@@ -1466,7 +1497,8 @@ class Octant {
    * displacements, which cannot both be 0).
    */
   static int octant(double dx, double dy) {
-    if (dx == 0.0 && dy == 0.0) throw ArgumentError("Cannot compute the octant for point ( $dx, $dy )");
+    if (dx == 0.0 && dy == 0.0)
+      throw ArgumentError("Cannot compute the octant for point ( $dx, $dy )");
 
     double adx = dx.abs();
     double ady = dy.abs();
@@ -1507,7 +1539,9 @@ class Octant {
   static int octantCoords(Coordinate p0, Coordinate p1) {
     double dx = p1.x - p0.x;
     double dy = p1.y - p0.y;
-    if (dx == 0.0 && dy == 0.0) throw ArgumentError("Cannot compute the octant for two identical points $p0");
+    if (dx == 0.0 && dy == 0.0)
+      throw ArgumentError(
+          "Cannot compute the octant for two identical points $p0");
     return octant(dx, dy);
   }
 
@@ -1555,7 +1589,9 @@ class NodingValidator {
   }
 
   void checkCollapse(Coordinate p0, Coordinate p1, Coordinate p2) {
-    if (p0.equals(p2)) throw new RuntimeException("found non-noded collapse at " + fact.createLineString([p0, p1, p2]).toText());
+    if (p0.equals(p2))
+      throw new RuntimeException("found non-noded collapse at " +
+          fact.createLineString([p0, p1, p2]).toText());
   }
 
   /**
@@ -1579,7 +1615,8 @@ class NodingValidator {
     }
   }
 
-  void checkInteriorIntersectionsWithIndex(SegmentString e0, int segIndex0, SegmentString e1, int segIndex1) {
+  void checkInteriorIntersectionsWithIndex(
+      SegmentString e0, int segIndex0, SegmentString e1, int segIndex1) {
     if (e0 == e1 && segIndex0 == segIndex1) return;
 //numTests++;
     Coordinate p00 = e0.getCoordinates()[segIndex0];
@@ -1589,9 +1626,17 @@ class NodingValidator {
 
     li.computeIntersection(p00, p01, p10, p11);
     if (li.hasIntersection()) {
-      if (li.isProper() || hasInteriorIntersection(li, p00, p01) || hasInteriorIntersection(li, p10, p11)) {
-        throw new RuntimeException(
-            "found non-noded intersection at " + p00.toString() + "-" + p01.toString() + " and " + p10.toString() + "-" + p11.toString());
+      if (li.isProper() ||
+          hasInteriorIntersection(li, p00, p01) ||
+          hasInteriorIntersection(li, p10, p11)) {
+        throw new RuntimeException("found non-noded intersection at " +
+            p00.toString() +
+            "-" +
+            p01.toString() +
+            " and " +
+            p10.toString() +
+            "-" +
+            p11.toString());
       }
     }
   }
@@ -1599,7 +1644,8 @@ class NodingValidator {
   /**
    *@return true if there is an intersection point which is not an endpoint of the segment p0-p1
    */
-  bool hasInteriorIntersection(LineIntersector li, Coordinate p0, Coordinate p1) {
+  bool hasInteriorIntersection(
+      LineIntersector li, Coordinate p0, Coordinate p1) {
     for (int i = 0; i < li.getIntersectionNum(); i++) {
       Coordinate intPt = li.getIntersection(i);
       if (!(intPt.equals(p0) || intPt.equals(p1))) return true;
@@ -1623,7 +1669,10 @@ class NodingValidator {
     for (SegmentString ss in segStrings) {
       List<Coordinate> pts = ss.getCoordinates();
       for (int j = 1; j < pts.length - 1; j++) {
-        if (pts[j].equals(testPt)) throw new RuntimeException("found endpt/interior pt intersection at index $j :pt " + testPt.toString());
+        if (pts[j].equals(testPt))
+          throw new RuntimeException(
+              "found endpt/interior pt intersection at index $j :pt " +
+                  testPt.toString());
       }
     }
   }
@@ -1666,7 +1715,8 @@ class InteriorIntersectionFinderAdder implements SegmentIntersectorN {
    * this call for segment pairs which they have determined do not intersect
    * (e.g. by an disjoint envelope test).
    */
-  void processIntersections(SegmentString e0, int segIndex0, SegmentString e1, int segIndex1) {
+  void processIntersections(
+      SegmentString e0, int segIndex0, SegmentString e1, int segIndex1) {
     // don't bother intersecting a segment with itself
     if (e0 == e1 && segIndex0 == segIndex1) return;
 
@@ -1720,9 +1770,11 @@ class ScaledNoder implements Noder {
   double offsetY = 0;
   bool isScaled = false;
 
-  ScaledNoder(Noder noder, double scaleFactor) : this.withOffests(noder, scaleFactor, 0, 0);
+  ScaledNoder(Noder noder, double scaleFactor)
+      : this.withOffests(noder, scaleFactor, 0, 0);
 
-  ScaledNoder.withOffests(Noder noder, double scaleFactor, double offsetX, double offsetY) {
+  ScaledNoder.withOffests(
+      Noder noder, double scaleFactor, double offsetX, double offsetY) {
     this.noder = noder;
     this.scaleFactor = scaleFactor;
     // no need to scale if input precision is already integral
@@ -1748,7 +1800,8 @@ class ScaledNoder implements Noder {
   List scale(List segStrings) {
     List<NodedSegmentString> nodedSegmentStrings = [];
     for (SegmentString ss in segStrings) {
-      nodedSegmentStrings.add(new NodedSegmentString(scaleCoords(ss.getCoordinates()), ss.getData()));
+      nodedSegmentStrings.add(new NodedSegmentString(
+          scaleCoords(ss.getCoordinates()), ss.getData()));
     }
     return nodedSegmentStrings;
   }
@@ -1762,7 +1815,8 @@ class ScaledNoder implements Noder {
         pts[i].getZ(),
       );
     }
-    List<Coordinate> roundPtsNoDup = CoordinateArrays.removeRepeatedPoints(roundPts);
+    List<Coordinate> roundPtsNoDup =
+        CoordinateArrays.removeRepeatedPoints(roundPts);
     return roundPtsNoDup;
   }
 
@@ -1875,13 +1929,15 @@ class IntersectionAdder implements SegmentIntersectorN {
    * Note that closed edges require a special check for the point shared by the beginning
    * and end segments.
    */
-  bool isTrivialIntersection(SegmentString e0, int segIndex0, SegmentString e1, int segIndex1) {
+  bool isTrivialIntersection(
+      SegmentString e0, int segIndex0, SegmentString e1, int segIndex1) {
     if (e0 == e1) {
       if (li.getIntersectionNum() == 1) {
         if (isAdjacentSegments(segIndex0, segIndex1)) return true;
         if (e0.isClosed()) {
           int maxSegIndex = e0.size() - 1;
-          if ((segIndex0 == 0 && segIndex1 == maxSegIndex) || (segIndex1 == 0 && segIndex0 == maxSegIndex)) {
+          if ((segIndex0 == 0 && segIndex1 == maxSegIndex) ||
+              (segIndex1 == 0 && segIndex0 == maxSegIndex)) {
             return true;
           }
         }
@@ -1898,7 +1954,8 @@ class IntersectionAdder implements SegmentIntersectorN {
    * this call for segment pairs which they have determined do not intersect
    * (e.g. by an disjoint envelope test).
    */
-  void processIntersections(SegmentString e0, int segIndex0, SegmentString e1, int segIndex1) {
+  void processIntersections(
+      SegmentString e0, int segIndex0, SegmentString e1, int segIndex1) {
     if (e0 == e1 && segIndex0 == segIndex1) return;
     numTests++;
     Coordinate p00 = e0.getCoordinates()[segIndex0];
@@ -1956,9 +2013,7 @@ class IntersectionAdder implements SegmentIntersectorN {
  *
  * @version 1.7
  */
-class BasicSegmentString
-    implements SegmentString
-{
+class BasicSegmentString implements SegmentString {
   List<Coordinate> _pts;
   Object _data;
 
@@ -1968,8 +2023,7 @@ class BasicSegmentString
    * @param pts the vertices of the segment string
    * @param data the user-defined data of this segment string (may be null)
    */
-  BasicSegmentString(List<Coordinate> pts, Object data)
-  {
+  BasicSegmentString(List<Coordinate> pts, Object data) {
     _pts = pts;
     _data = data;
   }
@@ -1979,23 +2033,32 @@ class BasicSegmentString
    *
    * @return the user-defined data
    */
-  Object getData() { return _data; }
+  Object getData() {
+    return _data;
+  }
 
   /**
    * Sets the user-defined data for this segment string.
    *
    * @param data an Object containing user-defined data
    */
-  void setData(Object data) { _data = data; }
+  void setData(Object data) {
+    _data = data;
+  }
 
-  int size() { return _pts.length; }
+  int size() {
+    return _pts.length;
+  }
 
-  Coordinate getCoordinate(int i) { return _pts[i]; }
+  Coordinate getCoordinate(int i) {
+    return _pts[i];
+  }
 
-  List<Coordinate> getCoordinates() { return _pts; }
+  List<Coordinate> getCoordinates() {
+    return _pts;
+  }
 
-  bool isClosed()
-  {
+  bool isClosed() {
     return _pts[0].equals(_pts[_pts.length - 1]);
   }
 
@@ -2006,15 +2069,14 @@ class BasicSegmentString
    * the last index in the vertex list
    * @return the octant of the segment at the vertex
    */
-  int getSegmentOctant(int index)
-  {
+  int getSegmentOctant(int index) {
     if (index == _pts.length - 1) return -1;
     return Octant.octantCoords(getCoordinate(index), getCoordinate(index + 1));
   }
 
-  String toString()
-  {
-    return WKTWriter.toLineStringFromSequence(new CoordinateArraySequence(_pts));
+  String toString() {
+    return WKTWriter.toLineStringFromSequence(
+        new CoordinateArraySequence(_pts));
   }
 }
 
@@ -2042,8 +2104,7 @@ class BasicSegmentString
  *
  * @see NodingIntersectionFinder
  */
-class FastNodingValidator
-{
+class FastNodingValidator {
   /**
    * Gets a list of all intersections found.
    * Intersections are represented as {@link Coordinate}s.
@@ -2052,8 +2113,7 @@ class FastNodingValidator
    * @param segStrings a collection of SegmentStrings
    * @return a list of Coordinate
    */
-  static List computeIntersections(List segStrings)
-  {
+  static List computeIntersections(List segStrings) {
     FastNodingValidator nv = new FastNodingValidator(segStrings);
     nv.setFindAllIntersections(true);
     nv.isValid();
@@ -2072,13 +2132,11 @@ class FastNodingValidator
    *
    * @param segStrings a collection of {@link SegmentString}s
    */
-  FastNodingValidator(List segStrings)
-  {
+  FastNodingValidator(List segStrings) {
     _segStrings = segStrings;
   }
 
-  void setFindAllIntersections(bool findAllIntersections)
-  {
+  void setFindAllIntersections(bool findAllIntersections) {
     _findAllIntersections = findAllIntersections;
   }
 
@@ -2089,8 +2147,7 @@ class FastNodingValidator
    *
    * @return a list of Coordinate
    */
-  List getIntersections()
-  {
+  List getIntersections() {
     return _segInt.getIntersections();
   }
 
@@ -2100,8 +2157,7 @@ class FastNodingValidator
    *
    * @return true if the arrangement contains an interior intersection
    */
-  bool isValid()
-  {
+  bool isValid() {
     _execute();
     return _isValid;
   }
@@ -2112,15 +2168,14 @@ class FastNodingValidator
    *
    * @return an error message documenting the intersection location
    */
-  String getErrorMessage()
-  {
+  String getErrorMessage() {
     if (_isValid) return "no intersections found";
 
     List<Coordinate> intSegs = _segInt.getIntersectionSegments();
-    return "found non-noded intersection between "
-        + WKTWriter.toLineStringFromCoords(intSegs[0], intSegs[1])
-        + " and "
-        + WKTWriter.toLineStringFromCoords(intSegs[2], intSegs[3]);
+    return "found non-noded intersection between " +
+        WKTWriter.toLineStringFromCoords(intSegs[0], intSegs[1]) +
+        " and " +
+        WKTWriter.toLineStringFromCoords(intSegs[2], intSegs[3]);
   }
 
   /**
@@ -2129,22 +2184,19 @@ class FastNodingValidator
    *
    * @throws TopologyException if an intersection is found
    */
-  void checkValid()
-  {
+  void checkValid() {
     _execute();
     if (!_isValid)
-      throw TopologyException.withCoord(getErrorMessage(), _segInt.getIntersection());
+      throw TopologyException.withCoord(
+          getErrorMessage(), _segInt.getIntersection());
   }
 
-  void _execute()
-  {
-    if (_segInt != null)
-      return;
+  void _execute() {
+    if (_segInt != null) return;
     _checkInteriorIntersections();
   }
 
-  void _checkInteriorIntersections()
-  {
+  void _checkInteriorIntersections() {
     /**
      * MD - It may even be reliable to simply check whether
      * end segments (of SegmentStrings) have an interior intersection,
@@ -2162,4 +2214,3 @@ class FastNodingValidator
     }
   }
 }
-

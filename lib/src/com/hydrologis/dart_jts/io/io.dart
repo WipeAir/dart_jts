@@ -18,9 +18,12 @@ enum Ordinate {
 }
 
 final List<Ordinate> OrdinateSet_XY = List.from([Ordinate.X, Ordinate.Y]);
-final List<Ordinate> OrdinateSet_XYZ = List.from([Ordinate.X, Ordinate.Y, Ordinate.Z]);
-final List<Ordinate> OrdinateSet_XYM = List.from([Ordinate.X, Ordinate.Y, Ordinate.M]);
-final List<Ordinate> OrdinateSet_XYZM = List.from([Ordinate.X, Ordinate.Y, Ordinate.Z, Ordinate.M]);
+final List<Ordinate> OrdinateSet_XYZ =
+    List.from([Ordinate.X, Ordinate.Y, Ordinate.Z]);
+final List<Ordinate> OrdinateSet_XYM =
+    List.from([Ordinate.X, Ordinate.Y, Ordinate.M]);
+final List<Ordinate> OrdinateSet_XYZM =
+    List.from([Ordinate.X, Ordinate.Y, Ordinate.Z, Ordinate.M]);
 
 /// A filter implementation to test if a coordinate sequence actually has
 /// meaningful values for an ordinate bit-pattern
@@ -37,11 +40,13 @@ class CheckOrdinatesFilter implements CoordinateSequenceFilter {
 
   /// @see org.locationtech.jts.geom.CoordinateSequenceFilter#isGeometryChanged */
   void filter(CoordinateSequence seq, int i) {
-    if (checkOrdinateFlags.contains(Ordinate.Z) && !outputOrdinates.contains(Ordinate.Z)) {
+    if (checkOrdinateFlags.contains(Ordinate.Z) &&
+        !outputOrdinates.contains(Ordinate.Z)) {
       if (!seq.getZ(i).isNaN) outputOrdinates.add(Ordinate.Z);
     }
 
-    if (checkOrdinateFlags.contains(Ordinate.M) && !outputOrdinates.contains(Ordinate.M)) {
+    if (checkOrdinateFlags.contains(Ordinate.M) &&
+        !outputOrdinates.contains(Ordinate.M)) {
       if (!seq.getM(i).isNaN) outputOrdinates.add(Ordinate.M);
     }
   }
@@ -172,7 +177,8 @@ class WKTWriter {
     // specify decimal separator explicitly to avoid problems in other locales
 //    NumberFormatSymbols symbols = NumberFormatSymbols();
 //    symbols.setDecimalSeparator('.');
-    String fmtString = "0" + (decimalPlaces > 0 ? "." : "") + stringOfChar('#', decimalPlaces);
+    String fmtString =
+        "0" + (decimalPlaces > 0 ? "." : "") + stringOfChar('#', decimalPlaces);
     return NumberFormat(fmtString);
   }
 
@@ -220,7 +226,8 @@ class WKTWriter {
     setTab(INDENT);
     this.outputDimension = outputDimension;
 
-    if (outputDimension < 2 || outputDimension > 4) throw ArgumentError("Invalid output dimension (must be 2 to 4)");
+    if (outputDimension < 2 || outputDimension > 4)
+      throw ArgumentError("Invalid output dimension (must be 2 to 4)");
 
     this.outputOrdinates = List.from([Ordinate.X, Ordinate.Y]);
     if (outputDimension > 2) {
@@ -275,11 +282,14 @@ class WKTWriter {
     if (this.outputDimension == 3) {
       if (outputOrdinates.contains(Ordinate.Z))
         this.outputOrdinates.add(Ordinate.Z);
-      else if (outputOrdinates.contains(Ordinate.M)) this.outputOrdinates.add(Ordinate.M);
+      else if (outputOrdinates.contains(Ordinate.M))
+        this.outputOrdinates.add(Ordinate.M);
     }
     if (this.outputDimension == 4) {
-      if (outputOrdinates.contains(Ordinate.Z)) this.outputOrdinates.add(Ordinate.Z);
-      if (outputOrdinates.contains(Ordinate.M)) this.outputOrdinates.add(Ordinate.M);
+      if (outputOrdinates.contains(Ordinate.Z))
+        this.outputOrdinates.add(Ordinate.Z);
+      if (outputOrdinates.contains(Ordinate.M))
+        this.outputOrdinates.add(Ordinate.M);
     }
   }
 
@@ -359,7 +369,8 @@ class WKTWriter {
   ///  Converts a <code>Geometry</code> to its Well-known Text representation.
   ///
   ///@param  geometry  a <code>Geometry</code> to process
-  void writeFormatted4Args(Geometry geometry, bool useFormatting, StringBuffer writer, PrecisionModel precisionModel) {
+  void writeFormatted4Args(Geometry geometry, bool useFormatting,
+      StringBuffer writer, PrecisionModel precisionModel) {
     // ensure we have a precision model
     if (precisionModel == null) {
       precisionModel = geometry.getPrecisionModel();
@@ -380,13 +391,15 @@ class WKTWriter {
   /// @param  writer             the output writer to append to
   /// @param  formatter       the <code>NumberFormatter</code> to use to convert
   ///      from a precise coordinate to an external coordinate
-  void appendGeometryTaggedText(Geometry geometry, bool useFormatting, StringBuffer writer, NumberFormat formatter) {
+  void appendGeometryTaggedText(Geometry geometry, bool useFormatting,
+      StringBuffer writer, NumberFormat formatter) {
     // evaluate the ordinates actually present in the geometry
     CheckOrdinatesFilter cof = CheckOrdinatesFilter(this.outputOrdinates);
     geometry.applyCSF(cof);
 
     // Append the WKT
-    appendGeometryTaggedText6Args(geometry, cof.getOutputOrdinates(), useFormatting, 0, writer, formatter);
+    appendGeometryTaggedText6Args(geometry, cof.getOutputOrdinates(),
+        useFormatting, 0, writer, formatter);
   }
 
   ///  Converts a <code>Geometry</code> to &lt;Geometry Tagged Text&gt; format,
@@ -399,27 +412,41 @@ class WKTWriter {
   /// @param  formatter       the <code>NumberFormatter</code> to use to convert
   ///      from a precise coordinate to an external coordinate
   void appendGeometryTaggedText6Args(
-      Geometry geometry, List<Ordinate> outputOrdinates, bool useFormatting, int level, StringBuffer writer, NumberFormat formatter) {
+      Geometry geometry,
+      List<Ordinate> outputOrdinates,
+      bool useFormatting,
+      int level,
+      StringBuffer writer,
+      NumberFormat formatter) {
     indent(useFormatting, level, writer);
 
     if (geometry is Point) {
-      appendPointTaggedText(geometry, outputOrdinates, useFormatting, level, writer, formatter);
+      appendPointTaggedText(
+          geometry, outputOrdinates, useFormatting, level, writer, formatter);
     } else if (geometry is LinearRing) {
-      appendLinearRingTaggedText(geometry, outputOrdinates, useFormatting, level, writer, formatter);
+      appendLinearRingTaggedText(
+          geometry, outputOrdinates, useFormatting, level, writer, formatter);
     } else if (geometry is LineString) {
-      appendLineStringTaggedText(geometry, outputOrdinates, useFormatting, level, writer, formatter);
+      appendLineStringTaggedText(
+          geometry, outputOrdinates, useFormatting, level, writer, formatter);
     } else if (geometry is Polygon) {
-      appendPolygonTaggedText(geometry, outputOrdinates, useFormatting, level, writer, formatter);
+      appendPolygonTaggedText(
+          geometry, outputOrdinates, useFormatting, level, writer, formatter);
     } else if (geometry is MultiPoint) {
-      appendMultiPointTaggedText(geometry, outputOrdinates, useFormatting, level, writer, formatter);
+      appendMultiPointTaggedText(
+          geometry, outputOrdinates, useFormatting, level, writer, formatter);
     } else if (geometry is MultiLineString) {
-      appendMultiLineStringTaggedText(geometry, outputOrdinates, useFormatting, level, writer, formatter);
+      appendMultiLineStringTaggedText(
+          geometry, outputOrdinates, useFormatting, level, writer, formatter);
     } else if (geometry is MultiPolygon) {
-      appendMultiPolygonTaggedText(geometry, outputOrdinates, useFormatting, level, writer, formatter);
+      appendMultiPolygonTaggedText(
+          geometry, outputOrdinates, useFormatting, level, writer, formatter);
     } else if (geometry is GeometryCollection) {
-      appendGeometryCollectionTaggedText(geometry, outputOrdinates, useFormatting, level, writer, formatter);
+      appendGeometryCollectionTaggedText(
+          geometry, outputOrdinates, useFormatting, level, writer, formatter);
     } else {
-      throw ArgumentError("Unsupported Geometry implementation:  ${geometry.runtimeType}");
+      throw ArgumentError(
+          "Unsupported Geometry implementation:  ${geometry.runtimeType}");
     }
   }
 
@@ -431,10 +458,17 @@ class WKTWriter {
   /// @param  level              the indentation level
   /// @param  writer             the output writer to append to
   /// @param  formatter          the formatter to use when writing numbers
-  void appendPointTaggedText(Point point, List<Ordinate> outputOrdinates, bool useFormatting, int level, StringBuffer writer, NumberFormat formatter) {
+  void appendPointTaggedText(
+      Point point,
+      List<Ordinate> outputOrdinates,
+      bool useFormatting,
+      int level,
+      StringBuffer writer,
+      NumberFormat formatter) {
     writer.write("POINT ");
     appendOrdinateText(outputOrdinates, writer);
-    appendSequenceText(point.getCoordinateSequence(), outputOrdinates, useFormatting, level, false, writer, formatter);
+    appendSequenceText(point.getCoordinateSequence(), outputOrdinates,
+        useFormatting, level, false, writer, formatter);
   }
 
   ///  Converts a <code>LineString</code> to &lt;LineString Tagged Text&gt;
@@ -447,10 +481,16 @@ class WKTWriter {
   /// @param  formatter       the <code>NumberFormatter</code> to use to convert
   ///      from a precise coordinate to an external coordinate
   void appendLineStringTaggedText(
-      LineString lineString, List<Ordinate> outputOrdinates, bool useFormatting, int level, StringBuffer writer, NumberFormat formatter) {
+      LineString lineString,
+      List<Ordinate> outputOrdinates,
+      bool useFormatting,
+      int level,
+      StringBuffer writer,
+      NumberFormat formatter) {
     writer.write("LINESTRING ");
     appendOrdinateText(outputOrdinates, writer);
-    appendSequenceText(lineString.getCoordinateSequence(), outputOrdinates, useFormatting, level, false, writer, formatter);
+    appendSequenceText(lineString.getCoordinateSequence(), outputOrdinates,
+        useFormatting, level, false, writer, formatter);
   }
 
   ///  Converts a <code>LinearRing</code> to &lt;LinearRing Tagged Text&gt;
@@ -463,10 +503,16 @@ class WKTWriter {
   /// @param  formatter       the <code>NumberFormatter</code> to use to convert
   ///      from a precise coordinate to an external coordinate
   void appendLinearRingTaggedText(
-      LinearRing linearRing, List<Ordinate> outputOrdinates, bool useFormatting, int level, StringBuffer writer, NumberFormat formatter) {
+      LinearRing linearRing,
+      List<Ordinate> outputOrdinates,
+      bool useFormatting,
+      int level,
+      StringBuffer writer,
+      NumberFormat formatter) {
     writer.write("LINEARRING ");
     appendOrdinateText(outputOrdinates, writer);
-    appendSequenceText(linearRing.getCoordinateSequence(), outputOrdinates, useFormatting, level, false, writer, formatter);
+    appendSequenceText(linearRing.getCoordinateSequence(), outputOrdinates,
+        useFormatting, level, false, writer, formatter);
   }
 
   ///  Converts a <code>Polygon</code> to &lt;Polygon Tagged Text&gt; format,
@@ -478,10 +524,17 @@ class WKTWriter {
   /// @param  writer             the output writer to append to
   /// @param  formatter       the <code>NumberFormatter</code> to use to convert
   ///      from a precise coordinate to an external coordinate
-  void appendPolygonTaggedText(Polygon polygon, List<Ordinate> outputOrdinates, bool useFormatting, int level, StringBuffer writer, NumberFormat formatter) {
+  void appendPolygonTaggedText(
+      Polygon polygon,
+      List<Ordinate> outputOrdinates,
+      bool useFormatting,
+      int level,
+      StringBuffer writer,
+      NumberFormat formatter) {
     writer.write("POLYGON ");
     appendOrdinateText(outputOrdinates, writer);
-    appendPolygonText(polygon, outputOrdinates, useFormatting, level, false, writer, formatter);
+    appendPolygonText(polygon, outputOrdinates, useFormatting, level, false,
+        writer, formatter);
   }
 
   ///  Converts a <code>MultiPoint</code> to &lt;MultiPoint Tagged Text&gt;
@@ -494,10 +547,16 @@ class WKTWriter {
   /// @param  formatter       the <code>NumberFormatter</code> to use to convert
   ///      from a precise coordinate to an external coordinate
   void appendMultiPointTaggedText(
-      MultiPoint multipoint, List<Ordinate> outputOrdinates, bool useFormatting, int level, StringBuffer writer, NumberFormat formatter) {
+      MultiPoint multipoint,
+      List<Ordinate> outputOrdinates,
+      bool useFormatting,
+      int level,
+      StringBuffer writer,
+      NumberFormat formatter) {
     writer.write("MULTIPOINT ");
     appendOrdinateText(outputOrdinates, writer);
-    appendMultiPointText(multipoint, outputOrdinates, useFormatting, level, writer, formatter);
+    appendMultiPointText(
+        multipoint, outputOrdinates, useFormatting, level, writer, formatter);
   }
 
   ///  Converts a <code>MultiLineString</code> to &lt;MultiLineString Tagged
@@ -510,10 +569,16 @@ class WKTWriter {
   /// @param  formatter       the <code>NumberFormatter</code> to use to convert
   ///      from a precise coordinate to an external coordinate
   void appendMultiLineStringTaggedText(
-      MultiLineString multiLineString, List<Ordinate> outputOrdinates, bool useFormatting, int level, StringBuffer writer, NumberFormat formatter) {
+      MultiLineString multiLineString,
+      List<Ordinate> outputOrdinates,
+      bool useFormatting,
+      int level,
+      StringBuffer writer,
+      NumberFormat formatter) {
     writer.write("MULTILINESTRING ");
     appendOrdinateText(outputOrdinates, writer);
-    appendMultiLineStringText(multiLineString, outputOrdinates, useFormatting, level, /*false, */ writer, formatter);
+    appendMultiLineStringText(multiLineString, outputOrdinates, useFormatting,
+        level, /*false, */ writer, formatter);
   }
 
   ///  Converts a <code>MultiPolygon</code> to &lt;MultiPolygon Tagged Text&gt;
@@ -526,10 +591,16 @@ class WKTWriter {
   /// @param  formatter       the <code>NumberFormatter</code> to use to convert
   ///      from a precise coordinate to an external coordinate
   void appendMultiPolygonTaggedText(
-      MultiPolygon multiPolygon, List<Ordinate> outputOrdinates, bool useFormatting, int level, StringBuffer writer, NumberFormat formatter) {
+      MultiPolygon multiPolygon,
+      List<Ordinate> outputOrdinates,
+      bool useFormatting,
+      int level,
+      StringBuffer writer,
+      NumberFormat formatter) {
     writer.write("MULTIPOLYGON ");
     appendOrdinateText(outputOrdinates, writer);
-    appendMultiPolygonText(multiPolygon, outputOrdinates, useFormatting, level, writer, formatter);
+    appendMultiPolygonText(
+        multiPolygon, outputOrdinates, useFormatting, level, writer, formatter);
   }
 
   ///  Converts a <code>GeometryCollection</code> to &lt;GeometryCollection
@@ -542,10 +613,16 @@ class WKTWriter {
   /// @param  formatter       the <code>NumberFormatter</code> to use to convert
   ///      from a precise coordinate to an external coordinate
   void appendGeometryCollectionTaggedText(
-      GeometryCollection geometryCollection, List<Ordinate> outputOrdinates, bool useFormatting, int level, StringBuffer writer, NumberFormat formatter) {
+      GeometryCollection geometryCollection,
+      List<Ordinate> outputOrdinates,
+      bool useFormatting,
+      int level,
+      StringBuffer writer,
+      NumberFormat formatter) {
     writer.write("GEOMETRYCOLLECTION ");
     appendOrdinateText(outputOrdinates, writer);
-    appendGeometryCollectionText(geometryCollection, outputOrdinates, useFormatting, level, writer, formatter);
+    appendGeometryCollectionText(geometryCollection, outputOrdinates,
+        useFormatting, level, writer, formatter);
   }
 
   /// Appends the i'th coordinate from the sequence to the writer
@@ -556,8 +633,15 @@ class WKTWriter {
   /// @param  i          the index of the coordinate to write
   /// @param  writer     the output writer to append to
   /// @param  formatter  the formatter to use for writing ordinate values
-  static void appendCoordinate(CoordinateSequence seq, List<Ordinate> outputOrdinates, int i, StringBuffer writer, NumberFormat formatter) {
-    writer.write(writeNumber(seq.getX(i), formatter) + " " + writeNumber(seq.getY(i), formatter));
+  static void appendCoordinate(
+      CoordinateSequence seq,
+      List<Ordinate> outputOrdinates,
+      int i,
+      StringBuffer writer,
+      NumberFormat formatter) {
+    writer.write(writeNumber(seq.getX(i), formatter) +
+        " " +
+        writeNumber(seq.getY(i), formatter));
 
     if (outputOrdinates.contains(Ordinate.Z)) {
       double z = seq.getZ(i);
@@ -621,7 +705,13 @@ class WKTWriter {
   /// @param  writer          the output writer to append to
   /// @param  formatter       the formatter to use for writing ordinate values.
   void appendSequenceText(
-      CoordinateSequence seq, List<Ordinate> outputOrdinates, bool useFormatting, int level, bool indentFirst, StringBuffer writer, NumberFormat formatter) {
+      CoordinateSequence seq,
+      List<Ordinate> outputOrdinates,
+      bool useFormatting,
+      int level,
+      bool indentFirst,
+      StringBuffer writer,
+      NumberFormat formatter) {
     if (seq.size() == 0) {
       writer.write("EMPTY");
     } else {
@@ -651,16 +741,24 @@ class WKTWriter {
   /// @param  writer          the output writer to append to
   /// @param  formatter       the formatter to use for writing ordinate values.
   void appendPolygonText(
-      Polygon polygon, List<Ordinate> outputOrdinates, bool useFormatting, int level, bool indentFirst, StringBuffer writer, NumberFormat formatter) {
+      Polygon polygon,
+      List<Ordinate> outputOrdinates,
+      bool useFormatting,
+      int level,
+      bool indentFirst,
+      StringBuffer writer,
+      NumberFormat formatter) {
     if (polygon.isEmpty()) {
       writer.write("EMPTY");
     } else {
       if (indentFirst) indent(useFormatting, level, writer);
       writer.write("(");
-      appendSequenceText(polygon.getExteriorRing().getCoordinateSequence(), outputOrdinates, useFormatting, level, false, writer, formatter);
+      appendSequenceText(polygon.getExteriorRing().getCoordinateSequence(),
+          outputOrdinates, useFormatting, level, false, writer, formatter);
       for (int i = 0; i < polygon.getNumInteriorRing(); i++) {
         writer.write(", ");
-        appendSequenceText(polygon.getInteriorRingN(i).getCoordinateSequence(), outputOrdinates, useFormatting, level + 1, true, writer, formatter);
+        appendSequenceText(polygon.getInteriorRingN(i).getCoordinateSequence(),
+            outputOrdinates, useFormatting, level + 1, true, writer, formatter);
       }
       writer.write(")");
     }
@@ -674,7 +772,13 @@ class WKTWriter {
   /// @param  level           the indentation level
   /// @param  writer          the output writer to append to
   /// @param  formatter       the formatter to use for writing ordinate values.
-  void appendMultiPointText(MultiPoint multiPoint, List<Ordinate> outputOrdinates, bool useFormatting, int level, StringBuffer writer, NumberFormat formatter) {
+  void appendMultiPointText(
+      MultiPoint multiPoint,
+      List<Ordinate> outputOrdinates,
+      bool useFormatting,
+      int level,
+      StringBuffer writer,
+      NumberFormat formatter) {
     if (multiPoint.isEmpty()) {
       writer.write("EMPTY");
     } else {
@@ -684,7 +788,14 @@ class WKTWriter {
           writer.write(", ");
           indentCoords(useFormatting, i, level + 1, writer);
         }
-        appendSequenceText((multiPoint.getGeometryN(i) as Point).getCoordinateSequence(), outputOrdinates, useFormatting, level, false, writer, formatter);
+        appendSequenceText(
+            (multiPoint.getGeometryN(i) as Point).getCoordinateSequence(),
+            outputOrdinates,
+            useFormatting,
+            level,
+            false,
+            writer,
+            formatter);
       }
       writer.write(")");
     }
@@ -719,7 +830,15 @@ class WKTWriter {
           level2 = level + 1;
           doIndent = true;
         }
-        appendSequenceText((multiLineString.getGeometryN(i) as LineString).getCoordinateSequence(), outputOrdinates, useFormatting, level2, doIndent, writer, formatter);
+        appendSequenceText(
+            (multiLineString.getGeometryN(i) as LineString)
+                .getCoordinateSequence(),
+            outputOrdinates,
+            useFormatting,
+            level2,
+            doIndent,
+            writer,
+            formatter);
       }
       writer.write(")");
     }
@@ -734,7 +853,12 @@ class WKTWriter {
   /// @param  writer          the output writer to append to
   /// @param  formatter       the formatter to use for writing ordinate values.
   void appendMultiPolygonText(
-      MultiPolygon multiPolygon, List<Ordinate> outputOrdinates, bool useFormatting, int level, StringBuffer writer, NumberFormat formatter) {
+      MultiPolygon multiPolygon,
+      List<Ordinate> outputOrdinates,
+      bool useFormatting,
+      int level,
+      StringBuffer writer,
+      NumberFormat formatter) {
     if (multiPolygon.isEmpty()) {
       writer.write("EMPTY");
     } else {
@@ -747,7 +871,8 @@ class WKTWriter {
           level2 = level + 1;
           doIndent = true;
         }
-        appendPolygonText(multiPolygon.getGeometryN(i), outputOrdinates, useFormatting, level2, doIndent, writer, formatter);
+        appendPolygonText(multiPolygon.getGeometryN(i), outputOrdinates,
+            useFormatting, level2, doIndent, writer, formatter);
       }
       writer.write(")");
     }
@@ -762,7 +887,12 @@ class WKTWriter {
   /// @param  writer          the output writer to append to
   /// @param  formatter       the formatter to use for writing ordinate values.
   void appendGeometryCollectionText(
-      GeometryCollection geometryCollection, List<Ordinate> outputOrdinates, bool useFormatting, int level, StringBuffer writer, NumberFormat formatter) {
+      GeometryCollection geometryCollection,
+      List<Ordinate> outputOrdinates,
+      bool useFormatting,
+      int level,
+      StringBuffer writer,
+      NumberFormat formatter) {
     if (geometryCollection.isEmpty()) {
       writer.write("EMPTY");
     } else {
@@ -773,13 +903,15 @@ class WKTWriter {
           writer.write(", ");
           level2 = level + 1;
         }
-        appendGeometryTaggedText6Args(geometryCollection.getGeometryN(i), outputOrdinates, useFormatting, level2, writer, formatter);
+        appendGeometryTaggedText6Args(geometryCollection.getGeometryN(i),
+            outputOrdinates, useFormatting, level2, writer, formatter);
       }
       writer.write(")");
     }
   }
 
-  void indentCoords(bool useFormatting, int coordIndex, int level, StringBuffer writer) {
+  void indentCoords(
+      bool useFormatting, int coordIndex, int level, StringBuffer writer) {
     if (coordsPerLine <= 0 || coordIndex % coordsPerLine != 0) return;
     indent(useFormatting, level, writer);
   }
@@ -849,11 +981,13 @@ class WKTToken {
   }
 
   ensureRParen() {
-    if (!isRParen) throw ArgumentError("expected right paren ')', got '$value'");
+    if (!isRParen)
+      throw ArgumentError("expected right paren ')', got '$value'");
   }
 
   ensureNumber() {
-    if (!isNumber) throw ArgumentError("expected numeric literal, got '$value'");
+    if (!isNumber)
+      throw ArgumentError("expected numeric literal, got '$value'");
   }
 
   ensureNotEOS() {
@@ -900,7 +1034,14 @@ class WKTTokenizer {
 
   static bool isDQuote(int c) => c == CC_DQUOTE;
 
-  static bool isSpecial(int c) => c == CC_RPAREN || c == CC_LPAREN || c == CC_MINUS || c == CC_UNDERSCORE || c == CC_PERIOD || c == CC_QUOTE || c == CC_SPACE;
+  static bool isSpecial(int c) =>
+      c == CC_RPAREN ||
+      c == CC_LPAREN ||
+      c == CC_MINUS ||
+      c == CC_UNDERSCORE ||
+      c == CC_PERIOD ||
+      c == CC_QUOTE ||
+      c == CC_SPACE;
 
   static bool isComma(int c) => c == CC_COMMA;
 
@@ -910,7 +1051,8 @@ class WKTTokenizer {
 
   static bool isE(int c) => c == CC_E || c == CC_e;
 
-  static bool isDelimiter(int c) => isWS(c) || isParen(c) || isComma(c) || isDQuote(c) || isDot(c);
+  static bool isDelimiter(int c) =>
+      isWS(c) || isParen(c) || isComma(c) || isDQuote(c) || isDot(c);
 
   static bool isLParen(int c) => c == CC_LPAREN;
 
@@ -918,7 +1060,8 @@ class WKTTokenizer {
 
   static errorToken(value) => WKTToken(WKTTokenType.ERROR, value);
 
-  static numericLiteralToken(value) => WKTToken(WKTTokenType.NUMERIC_LITERAL, value);
+  static numericLiteralToken(value) =>
+      WKTToken(WKTTokenType.NUMERIC_LITERAL, value);
 
   static eosToken() => WKTToken(WKTTokenType.EOS, null);
 
@@ -1001,7 +1144,8 @@ class WKTTokenizer {
       if (isWS(c)) break;
       if (isParen(c)) break;
       if (isComma(c)) break;
-      return errorToken("unexpected character in keyword at <${currentToken()}>");
+      return errorToken(
+          "unexpected character in keyword at <${currentToken()}>");
     }
     var token = consumeToken();
     return keywordToken(token);
@@ -1017,7 +1161,8 @@ class WKTTokenizer {
         var token = consumeToken();
         return quotedNameToken(token);
       }
-      return errorToken("unexpected character in quoted name at  <${currentToken()}>");
+      return errorToken(
+          "unexpected character in quoted name at  <${currentToken()}>");
     }
     if (eos) {
       return errorToken("quoted name not terminated at <${currentToken()}>");
@@ -1067,7 +1212,8 @@ class WKTTokenizer {
   scanSignedNumericLiteral() {
     if (isSign(cur)) {
       if (!advance()) throw "unexpected end of stream";
-      if (!(isDot(cur) || isDigit(cur))) throw "unexpected character after sign";
+      if (!(isDot(cur) || isDigit(cur)))
+        throw "unexpected character after sign";
     }
     scanUnsignedNumericLiteral();
   }
@@ -1130,7 +1276,8 @@ class WKTTokenizer {
         _lastReadToken = consumeSignedNumericLiteral();
         break;
       } else {
-        _lastReadToken = errorToken("unexpected character at <${currentToken()}>");
+        _lastReadToken =
+            errorToken("unexpected character at <${currentToken()}>");
       }
     }
     return _lastReadToken;
@@ -1236,7 +1383,8 @@ class WKTReader {
 
   GeometryFactory geometryFactory;
   CoordinateSequenceFactory csFactory;
-  static CoordinateSequenceFactory csFactoryXYZM = CoordinateArraySequenceFactory();
+  static CoordinateSequenceFactory csFactoryXYZM =
+      CoordinateArraySequenceFactory();
   PrecisionModel precisionModel;
 
   /// Flag indicating that the old notation of coordinates in JTS
@@ -1350,7 +1498,8 @@ class WKTReader {
   ///
   ///@throws  IOException     if an I/O error occurs
   ///@throws  ParseException  if an unexpected token was encountered
-  CoordinateSequence getCoordinate(WKTTokenizer tokenizer, List<Ordinate> ordinateFlags, bool tryParen) {
+  CoordinateSequence getCoordinate(
+      WKTTokenizer tokenizer, List<Ordinate> ordinateFlags, bool tryParen) {
     bool opened = false;
     if (tryParen && isOpenerNext(tokenizer)) {
       tokenizer.next();
@@ -1359,19 +1508,25 @@ class WKTReader {
 
 // create a sequence for one coordinate
     int offsetM = ordinateFlags.contains(Ordinate.Z) ? 1 : 0;
-    CoordinateSequence sequence = csFactory.createSizeDimMeas(1, toDimension(ordinateFlags), ordinateFlags.contains(Ordinate.M) ? 1 : 0);
-    sequence.setOrdinate(0, CoordinateSequence.X, precisionModel.makePrecise(getNextNumber(tokenizer)));
-    sequence.setOrdinate(0, CoordinateSequence.Y, precisionModel.makePrecise(getNextNumber(tokenizer)));
+    CoordinateSequence sequence = csFactory.createSizeDimMeas(1,
+        toDimension(ordinateFlags), ordinateFlags.contains(Ordinate.M) ? 1 : 0);
+    sequence.setOrdinate(0, CoordinateSequence.X,
+        precisionModel.makePrecise(getNextNumber(tokenizer)));
+    sequence.setOrdinate(0, CoordinateSequence.Y,
+        precisionModel.makePrecise(getNextNumber(tokenizer)));
 
 // additionally read other vertices
     if (ordinateFlags.contains(Ordinate.Z)) {
       sequence.setOrdinate(0, CoordinateSequence.Z, getNextNumber(tokenizer));
     }
     if (ordinateFlags.contains(Ordinate.M)) {
-      sequence.setOrdinate(0, CoordinateSequence.Z + offsetM, getNextNumber(tokenizer));
+      sequence.setOrdinate(
+          0, CoordinateSequence.Z + offsetM, getNextNumber(tokenizer));
     }
 
-    if (ordinateFlags.length == 2 && this.isAllowOldJtsCoordinateSyntax && isNumberNext(tokenizer)) {
+    if (ordinateFlags.length == 2 &&
+        this.isAllowOldJtsCoordinateSyntax &&
+        isNumberNext(tokenizer)) {
       sequence.setOrdinate(0, CoordinateSequence.Z, getNextNumber(tokenizer));
     }
 
@@ -1397,7 +1552,8 @@ class WKTReader {
   ///
   ///@throws  IOException     if an I/O error occurs
   ///@throws  ParseException  if an unexpected token was encountered
-  CoordinateSequence getCoordinateSequence(WKTTokenizer tokenizer, List<Ordinate> ordinateFlags) {
+  CoordinateSequence getCoordinateSequence(
+      WKTTokenizer tokenizer, List<Ordinate> ordinateFlags) {
     return getCoordinateSequenceTryParen(tokenizer, ordinateFlags, false);
   }
 
@@ -1413,9 +1569,11 @@ class WKTReader {
   ///
   ///@throws  IOException     if an I/O error occurs
   ///@throws  ParseException  if an unexpected token was encountered
-  CoordinateSequence getCoordinateSequenceTryParen(WKTTokenizer tokenizer, List<Ordinate> ordinateFlags, bool tryParen) {
+  CoordinateSequence getCoordinateSequenceTryParen(
+      WKTTokenizer tokenizer, List<Ordinate> ordinateFlags, bool tryParen) {
     if (getNextEmptyOrOpener(tokenizer) == EMPTY)
-      return this.csFactory.createSizeDimMeas(0, toDimension(ordinateFlags), ordinateFlags.contains(Ordinate.M) ? 1 : 0);
+      return this.csFactory.createSizeDimMeas(0, toDimension(ordinateFlags),
+          ordinateFlags.contains(Ordinate.M) ? 1 : 0);
 
     List<CoordinateSequence> coordinates = [];
     do {
@@ -1445,15 +1603,18 @@ class WKTReader {
   /// @param sequences an array of coordinate sequences. Each sequence contains <b>exactly one</b> coordinate.
   /// @param ordinateFlags a bit-mask of required ordinates.
   /// @return a coordinate sequence containing all coordinate
-  CoordinateSequence mergeSequences(List<CoordinateSequence> sequences, List<Ordinate> ordinateFlags) {
+  CoordinateSequence mergeSequences(
+      List<CoordinateSequence> sequences, List<Ordinate> ordinateFlags) {
     // if the sequences array is empty or null create an empty sequence
-    if (sequences == null || sequences.isEmpty) return csFactory.createSizeDim(0, toDimension(ordinateFlags));
+    if (sequences == null || sequences.isEmpty)
+      return csFactory.createSizeDim(0, toDimension(ordinateFlags));
 
     if (sequences.length == 1) return sequences[0];
 
     List<Ordinate> mergeOrdinates;
     if (this.isAllowOldJtsCoordinateSyntax && ordinateFlags.length == 2) {
-      mergeOrdinates = []..addAll(ordinateFlags); // TODO check if this clone is enough
+      mergeOrdinates = []
+        ..addAll(ordinateFlags); // TODO check if this clone is enough
       for (int i = 0; i < sequences.length; i++) {
         if ((sequences[i]).hasZ()) {
           mergeOrdinates.add(Ordinate.Z);
@@ -1464,15 +1625,22 @@ class WKTReader {
       mergeOrdinates = ordinateFlags;
 
     // create and fill the result sequence // TODO check
-    CoordinateSequence sequence = this.csFactory.createSizeDimMeas(sequences.length, toDimension(mergeOrdinates), mergeOrdinates.contains(Ordinate.M) ? 1 : 0);
+    CoordinateSequence sequence = this.csFactory.createSizeDimMeas(
+        sequences.length,
+        toDimension(mergeOrdinates),
+        mergeOrdinates.contains(Ordinate.M) ? 1 : 0);
 
-    int offsetM = CoordinateSequence.Z + (mergeOrdinates.contains(Ordinate.Z) ? 1 : 0);
+    int offsetM =
+        CoordinateSequence.Z + (mergeOrdinates.contains(Ordinate.Z) ? 1 : 0);
     for (int i = 0; i < sequences.length; i++) {
       CoordinateSequence item = sequences[i];
-      sequence.setOrdinate(i, CoordinateSequence.X, item.getOrdinate(0, CoordinateSequence.X));
-      sequence.setOrdinate(i, CoordinateSequence.Y, item.getOrdinate(0, CoordinateSequence.Y));
+      sequence.setOrdinate(
+          i, CoordinateSequence.X, item.getOrdinate(0, CoordinateSequence.X));
+      sequence.setOrdinate(
+          i, CoordinateSequence.Y, item.getOrdinate(0, CoordinateSequence.Y));
       if (mergeOrdinates.contains(Ordinate.Z)) {
-        sequence.setOrdinate(i, CoordinateSequence.Z, item.getOrdinate(0, CoordinateSequence.Z));
+        sequence.setOrdinate(
+            i, CoordinateSequence.Z, item.getOrdinate(0, CoordinateSequence.Z));
       }
       if (mergeOrdinates.contains(Ordinate.M)) {
         sequence.setOrdinate(i, offsetM, item.getOrdinate(0, offsetM));
@@ -1613,7 +1781,8 @@ class WKTReader {
           }
         }
     }
-    throw ArgumentError("Expected number token but found ${token.type}: ${token.value}");
+    throw ArgumentError(
+        "Expected number token but found ${token.type}: ${token.value}");
   }
 
   ///  Returns the next EMPTY or L_PAREN in the stream as uppercase text.
@@ -1639,7 +1808,8 @@ class WKTReader {
     if (nextWord == EMPTY || nextWord == L_PAREN) {
       return nextWord;
     }
-    throw ArgumentError("Expected $EMPTY or $L_PAREN token but found $nextWord");
+    throw ArgumentError(
+        "Expected $EMPTY or $L_PAREN token but found $nextWord");
   }
 
   ///  Returns the next ordinate flag information in the stream as uppercase text.
@@ -1692,7 +1862,8 @@ class WKTReader {
     if (nextWord == COMMA || nextWord == R_PAREN) {
       return nextWord;
     }
-    throw ArgumentError("Expected $COMMA or $R_PAREN token but found $nextWord");
+    throw ArgumentError(
+        "Expected $COMMA or $R_PAREN token but found $nextWord");
   }
 
   ///  Returns the next {@link #R_PAREN} in the stream.
@@ -1733,7 +1904,8 @@ class WKTReader {
       case WKTTokenType.COMMA:
         return COMMA; //','
     }
-    throw ArgumentError("Expected word token but found ${token.type}: ${token.value}");
+    throw ArgumentError(
+        "Expected word token but found ${token.type}: ${token.value}");
   }
 
   /// Gets a description of the current token type
@@ -1783,7 +1955,8 @@ class WKTReader {
     return readGeometryTaggedTextWithOpts(tokenizer, type, ordinateFlags);
   }
 
-  Geometry readGeometryTaggedTextWithOpts(WKTTokenizer tokenizer, String type, List<Ordinate> ordinateFlags) {
+  Geometry readGeometryTaggedTextWithOpts(
+      WKTTokenizer tokenizer, String type, List<Ordinate> ordinateFlags) {
     if (ordinateFlags.length == 2) {
       ordinateFlags = getNextOrdinateFlags(tokenizer);
     }
@@ -1794,9 +1967,11 @@ class WKTReader {
     // exposed a value indicating which min/max dimension it can handle or even an
     // ordinate bit-flag.
     try {
-      csFactory.createSizeDimMeas(0, toDimension(ordinateFlags), ordinateFlags.contains(Ordinate.M) ? 1 : 0);
+      csFactory.createSizeDimMeas(0, toDimension(ordinateFlags),
+          ordinateFlags.contains(Ordinate.M) ? 1 : 0);
     } catch (e) {
-      geometryFactory = GeometryFactory(geometryFactory.getPrecisionModel(), geometryFactory.getSRID(), csFactoryXYZM);
+      geometryFactory = GeometryFactory(geometryFactory.getPrecisionModel(),
+          geometryFactory.getSRID(), csFactoryXYZM);
     }
 
     if (type.startsWith("POINT")) {
@@ -1817,7 +1992,8 @@ class WKTReader {
       return readGeometryCollectionText(tokenizer, ordinateFlags);
     }
     var currentToken = tokenizer.currentToken();
-    throw ArgumentError("Unknown geometry type: ${currentToken.type}  -> ${currentToken.value}");
+    throw ArgumentError(
+        "Unknown geometry type: ${currentToken.type}  -> ${currentToken.value}");
   }
 
   ///  Creates a <code>Point</code> using the next token in the stream.
@@ -1829,7 +2005,8 @@ class WKTReader {
   ///@throws  IOException     if an I/O error occurs
   ///@throws  ParseException  if an unexpected token was encountered
   Point readPointText(WKTTokenizer tokenizer, List<Ordinate> ordinateFlags) {
-    Point point = geometryFactory.createPointSeq(getCoordinateSequence(tokenizer, ordinateFlags));
+    Point point = geometryFactory
+        .createPointSeq(getCoordinateSequence(tokenizer, ordinateFlags));
     return point;
   }
 
@@ -1841,8 +2018,10 @@ class WKTReader {
   ///      token in the stream
   ///@throws  IOException     if an I/O error occurs
   ///@throws  ParseException  if an unexpected token was encountered
-  LineString readLineStringText(WKTTokenizer tokenizer, List<Ordinate> ordinateFlags) {
-    return geometryFactory.createLineStringSeq(getCoordinateSequence(tokenizer, ordinateFlags));
+  LineString readLineStringText(
+      WKTTokenizer tokenizer, List<Ordinate> ordinateFlags) {
+    return geometryFactory
+        .createLineStringSeq(getCoordinateSequence(tokenizer, ordinateFlags));
   }
 
   ///  Creates a <code>LinearRing</code> using the next token in the stream.
@@ -1855,8 +2034,10 @@ class WKTReader {
   ///@throws  ParseException  if the coordinates used to create the <code>LinearRing</code>
   ///      do not form a closed linestring, or if an unexpected token was
   ///      encountered
-  LinearRing readLinearRingText(WKTTokenizer tokenizer, List<Ordinate> ordinateFlags) {
-    return geometryFactory.createLinearRingSeq(getCoordinateSequence(tokenizer, ordinateFlags));
+  LinearRing readLinearRingText(
+      WKTTokenizer tokenizer, List<Ordinate> ordinateFlags) {
+    return geometryFactory
+        .createLinearRingSeq(getCoordinateSequence(tokenizer, ordinateFlags));
   }
 
   ///  Creates a <code>MultiPoint</code> using the next tokens in the stream.
@@ -1867,8 +2048,10 @@ class WKTReader {
   ///      token in the stream
   ///@throws  IOException     if an I/O error occurs
   ///@throws  ParseException  if an unexpected token was encountered
-  MultiPoint readMultiPointText(WKTTokenizer tokenizer, List<Ordinate> ordinateFlags) {
-    return geometryFactory.createMultiPointSeq(getCoordinateSequenceTryParen(tokenizer, ordinateFlags, this.isAllowOldJtsMultipointSyntax));
+  MultiPoint readMultiPointText(
+      WKTTokenizer tokenizer, List<Ordinate> ordinateFlags) {
+    return geometryFactory.createMultiPointSeq(getCoordinateSequenceTryParen(
+        tokenizer, ordinateFlags, this.isAllowOldJtsMultipointSyntax));
   }
 
   ///  Creates a <code>Polygon</code> using the next token in the stream.
@@ -1881,7 +2064,8 @@ class WKTReader {
   ///      shell and holes do not form closed linestrings, or if an unexpected
   ///      token was encountered.
   ///@throws  IOException     if an I/O error occurs
-  Polygon readPolygonText(WKTTokenizer tokenizer, List<Ordinate> ordinateFlags) {
+  Polygon readPolygonText(
+      WKTTokenizer tokenizer, List<Ordinate> ordinateFlags) {
     String nextToken = getNextEmptyOrOpener(tokenizer);
     if (nextToken == EMPTY) {
       return geometryFactory.createPolygonEmpty();
@@ -1906,7 +2090,8 @@ class WKTReader {
   ///      next token in the stream
   ///@throws  IOException     if an I/O error occurs
   ///@throws  ParseException  if an unexpected token was encountered
-  MultiLineString readMultiLineStringText(WKTTokenizer tokenizer, List<Ordinate> ordinateFlags) {
+  MultiLineString readMultiLineStringText(
+      WKTTokenizer tokenizer, List<Ordinate> ordinateFlags) {
     String nextToken = getNextEmptyOrOpener(tokenizer);
     if (nextToken == EMPTY) {
       return geometryFactory.createMultiLineStringEmpty();
@@ -1931,7 +2116,8 @@ class WKTReader {
   ///      <code>Polygon</code> shells and holes do not form closed linestrings.
   ///@throws  IOException     if an I/O error occurs
   ///@throws  ParseException  if an unexpected token was encountered
-  MultiPolygon readMultiPolygonText(WKTTokenizer tokenizer, List<Ordinate> ordinateFlags) {
+  MultiPolygon readMultiPolygonText(
+      WKTTokenizer tokenizer, List<Ordinate> ordinateFlags) {
     String nextToken = getNextEmptyOrOpener(tokenizer);
     if (nextToken == EMPTY) {
       return geometryFactory.createMultiPolygonEmpty();
@@ -1956,7 +2142,8 @@ class WKTReader {
   ///      shell and holes do not form closed linestrings, or if an unexpected
   ///      token was encountered
   ///@throws  IOException     if an I/O error occurs
-  GeometryCollection readGeometryCollectionText(WKTTokenizer tokenizer, List<Ordinate> ordinateFlags) {
+  GeometryCollection readGeometryCollectionText(
+      WKTTokenizer tokenizer, List<Ordinate> ordinateFlags) {
     String nextToken = getNextEmptyOrOpener(tokenizer);
     if (nextToken == EMPTY) {
       return geometryFactory.createGeometryCollectionEmpty();

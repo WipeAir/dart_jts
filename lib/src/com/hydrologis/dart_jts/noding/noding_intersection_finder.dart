@@ -21,26 +21,26 @@ part of dart_jts;
  */
 /*class NodingIntersectionFinder implements SegmentIntersector
 {
-  *//**
+  */ /**
    * Creates a finder which tests if there is at least one intersection.
    * Uses short-circuiting for efficient performance.
    * The intersection found is recorded.
    *
    * @param li a line intersector
    * @return a finder which tests if there is at least one intersection.
-   *//*
+   */ /*
   static NodingIntersectionFinder createAnyIntersectionFinder(LineIntersector li)
   {
     return new NodingIntersectionFinder(li);
   }
 
-  *//**
+  */ /**
    * Creates a finder which finds all intersections.
    * The intersections are recorded for later inspection.
    *
    * @param li a line intersector
    * @return a finder which finds all intersections.
-   *//*
+   */ /*
   static NodingIntersectionFinder createAllIntersectionsFinder(LineIntersector li)
   {
     NodingIntersectionFinder finder = new NodingIntersectionFinder(li);
@@ -48,13 +48,13 @@ part of dart_jts;
     return finder;
   }
 
-  *//**
+  */ /**
    * Creates a finder which finds all interior intersections.
    * The intersections are recorded for later inspection.
    *
    * @param li a line intersector
    * @return a finder which finds all interior intersections.
-   *//*
+   */ /*
   static NodingIntersectionFinder createInteriorIntersectionsFinder(LineIntersector li)
   {
     NodingIntersectionFinder finder = new NodingIntersectionFinder(li);
@@ -63,13 +63,13 @@ part of dart_jts;
     return finder;
   }
 
-  *//**
+  */ /**
    * Creates an finder which counts all intersections.
    * The intersections are note recorded to reduce memory usage.
    *
    * @param li a line intersector
    * @return a finder which counts all intersections.
-   *//*
+   */ /*
   static NodingIntersectionFinder createIntersectionCounter(LineIntersector li)
   {
     NodingIntersectionFinder finder = new NodingIntersectionFinder(li);
@@ -78,13 +78,13 @@ part of dart_jts;
     return finder;
   }
 
-  *//**
+  */ /**
    * Creates an finder which counts all interior intersections.
    * The intersections are note recorded to reduce memory usage.
    *
    * @param li a line intersector
    * @return a finder which counts all interior intersections.
-   *//*
+   */ /*
   static NodingIntersectionFinder createInteriorIntersectionCounter(LineIntersector li)
   {
     NodingIntersectionFinder finder = new NodingIntersectionFinder(li);
@@ -105,19 +105,19 @@ part of dart_jts;
   List _intersections = [];
   int _intersectionCount = 0;
 
-  *//**
+  */ /**
    * Creates an intersection finder which finds an intersection
    * if one exists
    *
    * @param li the LineIntersector to use
-   *//*
+   */ /*
   NodingIntersectionFinder(LineIntersector li)
   {
     _li = li;
     _interiorIntersection = null;
   }
 
-  *//**
+  */ /**
    * Sets whether all intersections should be computed.
    * When this is <code>false</code> (the default value)
    * the value of {@link #isDone()} is <code>true</code> after the first intersection is found.
@@ -125,22 +125,22 @@ part of dart_jts;
    * Default is <code>false</code>.
    *
    * @param findAllIntersections whether all intersections should be computed
-   *//*
+   */ /*
   void setFindAllIntersections(boolean findAllIntersections)
   {
     _findAllIntersections = findAllIntersections;
   }
 
-  *//**
+  */ /**
    * Sets whether only interior (proper) intersections will be found.
    * @param isInteriorIntersectionsOnly whether to find only interior intersections
-   *//*
+   */ /*
   void setInteriorIntersectionsOnly(boolean isInteriorIntersectionsOnly)
   {
     this.isInteriorIntersectionsOnly  = isInteriorIntersectionsOnly;
   }
 
-  *//**
+  */ /**
    * Sets whether only end segments should be tested for intersection.
    * This is a performance optimization that may be used if
    * the segments have been previously noded by an appropriate algorithm.
@@ -148,84 +148,84 @@ part of dart_jts;
    * end segments.
    *
    * @param isCheckEndSegmentsOnly whether to test only end segments
-   *//*
+   */ /*
   void setCheckEndSegmentsOnly(boolean isCheckEndSegmentsOnly)
   {
     this.isCheckEndSegmentsOnly = isCheckEndSegmentsOnly;
   }
 
-  *//**
+  */ /**
    * Sets whether intersection points are recorded.
    * If the only need is to count intersection points, this can be set to <code>false</code>.
    * <p>
    * Default is <code>true</code>.
    *
    * @param keepIntersections indicates whether intersections should be recorded
-   *//*
+   */ /*
   void setKeepIntersections(boolean keepIntersections)
   {
     this.keepIntersections = keepIntersections;
   }
 
-  *//**
+  */ /**
    * Gets the intersections found.
    *
    * @return a List of {@link Coordinate}
-   *//*
+   */ /*
   List getIntersections()
   {
     return intersections;
   }
 
-  *//**
+  */ /**
    * Gets the count of intersections found.
    *
    * @return the intersection count
-   *//*
+   */ /*
   int count()
   {
     return intersectionCount;
   }
 
-  *//**
+  */ /**
    * Tests whether an intersection was found.
    *
    * @return true if an intersection was found
-   *//*
+   */ /*
   boolean hasIntersection()
   {
     return interiorIntersection != null;
   }
 
-  *//**
+  */ /**
    * Gets the computed location of the intersection.
    * Due to round-off, the location may not be exact.
    *
    * @return the coordinate for the intersection location
-   *//*
+   */ /*
   Coordinate getIntersection()
   {
     return interiorIntersection;
   }
 
-  *//**
+  */ /**
    * Gets the endpoints of the intersecting segments.
    *
    * @return an array of the segment endpoints (p00, p01, p10, p11)
-   *//*
+   */ /*
   Coordinate[] getIntersectionSegments()
   {
     return intSegments;
   }
 
-  *//**
+  */ /**
    * This method is called by clients
    * of the {@link SegmentIntersector} class to process
    * intersections for two segments of the {@link SegmentString}s being intersected.
    * Note that some clients (such as <code>MonotoneChain</code>s) may optimize away
    * this call for segment pairs which they have determined do not intersect
    * (e.g. by an disjoint envelope test).
-   *//*
+   */ /*
   void processIntersections(
       SegmentString e0,  int segIndex0,
       SegmentString e1,  int segIndex1
@@ -240,10 +240,10 @@ part of dart_jts;
     boolean isSameSegment = isSameSegString && segIndex0 == segIndex1;
     if (isSameSegment) return;
 
-    *//**
+    */ /**
      * If enabled, only test end segments (on either segString).
      *
-     *//*
+     */ /*
     if (isCheckEndSegmentsOnly) {
       boolean isEndSegPresent = isEndSegment(e0, segIndex0) || isEndSegment(e1, segIndex1);
       if (! isEndSegPresent)
@@ -262,13 +262,13 @@ part of dart_jts;
     li.computeIntersection(p00, p01, p10, p11);
 //if (li.hasIntersection() && li.isProper()) Debug.println(li);
 
-    *//**
+    */ /**
      * Check for an intersection in the interior of a segment
-     *//*
+     */ /*
     boolean isInteriorInt = li.hasIntersection() && li.isInteriorIntersection();
-    *//**
+    */ /**
      * Check for an intersection between two vertices which are not both endpoints.
-     *//*
+     */ /*
     bool isInteriorVertexInt = false;
     if (!_isInteriorIntersectionsOnly) {
       bool isAdjacentSegment = isSameSegString && math.abs(segIndex1 - segIndex0) <= 1;
@@ -291,7 +291,7 @@ part of dart_jts;
     }
   }
 
-  *//**
+  */ /**
    * Tests if an intersection occurs between a segmentString interior vertex and another vertex.
    * Note that intersections between two endpoint vertices are valid noding,
    * and are not flagged.
@@ -305,7 +305,7 @@ part of dart_jts;
    * @param isEnd10 true if vertex is a segmentString endpoint
    * @param isEnd11 true if vertex is a segmentString endpoint
    * @return true if an intersection is found
-   *//*
+   */ /*
   static bool _isInteriorVertexIntersection(
       Coordinate p00, Coordinate p01,
       Coordinate p10, Coordinate p11,
@@ -318,7 +318,7 @@ part of dart_jts;
     return false;
   }
 
-  *//**
+  */ /**
    * Tests if two vertices with at least one in a segmentString interior
    * are equal.
    *
@@ -327,7 +327,7 @@ part of dart_jts;
    * @param isEnd0 true if vertex is a segmentString endpoint
    * @param isEnd1 true if vertex is a segmentString endpoint
    * @return true if an intersection is found
-   *//*
+   */ /*
   static bool _isInteriorVertexIntersection(
       Coordinate p0,
       Coordinate p1,
@@ -344,14 +344,14 @@ part of dart_jts;
     return false;
   }
 
-  *//**
+  */ /**
    * Tests whether a segment in a {@link SegmentString} is an end segment.
    * (either the first or last).
    *
    * @param segStr a segment string
    * @param index the index of a segment in the segment string
    * @return true if the segment is an end segment
-   *//*
+   */ /*
   static bool _isEndSegment(SegmentString segStr, int index)
   {
     if (index == 0) return true;
@@ -359,9 +359,9 @@ part of dart_jts;
     return false;
   }
 
-  *//**
+  */ /**
    *
-   *//*
+   */ /*
   bool isDone()
   {
     if (_findAllIntersections) return false;
@@ -369,44 +369,44 @@ part of dart_jts;
   }
 
 }*/
-class NodingIntersectionFinder extends SegmentIntersectorN
-{
-  static NodingIntersectionFinder createAnyIntersectionFinder(LineIntersector li)
-  {
+class NodingIntersectionFinder extends SegmentIntersectorN {
+  static NodingIntersectionFinder createAnyIntersectionFinder(
+      LineIntersector li) {
     return new NodingIntersectionFinder(li);
   }
 
-  static NodingIntersectionFinder createAllIntersectionsFinder(LineIntersector li)
-  {
+  static NodingIntersectionFinder createAllIntersectionsFinder(
+      LineIntersector li) {
     NodingIntersectionFinder finder = new NodingIntersectionFinder(li);
     finder.setFindAllIntersections(true);
     return finder;
   }
 
-  static NodingIntersectionFinder createInteriorIntersectionsFinder(LineIntersector li)
-  {
+  static NodingIntersectionFinder createInteriorIntersectionsFinder(
+      LineIntersector li) {
     NodingIntersectionFinder finder = new NodingIntersectionFinder(li);
     finder.setFindAllIntersections(true);
     finder.setInteriorIntersectionsOnly(true);
     return finder;
   }
 
-  static NodingIntersectionFinder createIntersectionCounter(LineIntersector li)
-  {
+  static NodingIntersectionFinder createIntersectionCounter(
+      LineIntersector li) {
     NodingIntersectionFinder finder = new NodingIntersectionFinder(li);
     finder.setFindAllIntersections(true);
     finder.setKeepIntersections(false);
     return finder;
   }
 
-  static NodingIntersectionFinder createInteriorIntersectionCounter(LineIntersector li)
-  {
+  static NodingIntersectionFinder createInteriorIntersectionCounter(
+      LineIntersector li) {
     NodingIntersectionFinder finder = new NodingIntersectionFinder(li);
     finder.setInteriorIntersectionsOnly(true);
     finder.setFindAllIntersections(true);
     finder.setKeepIntersections(false);
     return finder;
   }
+
   bool findAllIntersections = false;
   bool isCheckEndSegmentsOnly = false;
   bool keepIntersections = true;
@@ -417,59 +417,49 @@ class NodingIntersectionFinder extends SegmentIntersectorN
   List intersections = [];
   int intersectionCount = 0;
 
-  NodingIntersectionFinder(LineIntersector li)
-  {
+  NodingIntersectionFinder(LineIntersector li) {
     this.li = li;
     interiorIntersection = null;
   }
 
-  void setFindAllIntersections(bool findAllIntersections)
-  {
+  void setFindAllIntersections(bool findAllIntersections) {
     this.findAllIntersections = findAllIntersections;
   }
 
-  void setInteriorIntersectionsOnly(bool isInteriorIntersectionsOnly)
-  {
+  void setInteriorIntersectionsOnly(bool isInteriorIntersectionsOnly) {
     this.isInteriorIntersectionsOnly = isInteriorIntersectionsOnly;
   }
 
-  void setCheckEndSegmentsOnly(bool isCheckEndSegmentsOnly)
-  {
+  void setCheckEndSegmentsOnly(bool isCheckEndSegmentsOnly) {
     this.isCheckEndSegmentsOnly = isCheckEndSegmentsOnly;
   }
 
-  void setKeepIntersections(bool keepIntersections)
-  {
+  void setKeepIntersections(bool keepIntersections) {
     this.keepIntersections = keepIntersections;
   }
 
-  List getIntersections()
-  {
+  List getIntersections() {
     return intersections;
   }
 
-  int count()
-  {
+  int count() {
     return intersectionCount;
   }
 
-  bool hasIntersection()
-  {
+  bool hasIntersection() {
     return interiorIntersection != null;
   }
 
-  Coordinate getIntersection()
-  {
+  Coordinate getIntersection() {
     return interiorIntersection;
   }
 
-  List<Coordinate> getIntersectionSegments()
-  {
+  List<Coordinate> getIntersectionSegments() {
     return intSegments;
   }
 
-  void processIntersections(SegmentString e0, int segIndex0, SegmentString e1, int segIndex1)
-  {
+  void processIntersections(
+      SegmentString e0, int segIndex0, SegmentString e1, int segIndex1) {
     if ((!findAllIntersections) && hasIntersection()) {
       return;
     }
@@ -479,7 +469,8 @@ class NodingIntersectionFinder extends SegmentIntersectorN
       return;
     }
     if (isCheckEndSegmentsOnly) {
-      bool isEndSegPresent = (isEndSegment(e0, segIndex0) || isEndSegment(e1, segIndex1));
+      bool isEndSegPresent =
+          (isEndSegment(e0, segIndex0) || isEndSegment(e1, segIndex1));
       if (!isEndSegPresent) {
         return;
       }
@@ -496,8 +487,11 @@ class NodingIntersectionFinder extends SegmentIntersectorN
     bool isInteriorInt = (li.hasIntersection() && li.isInteriorIntersection());
     bool isInteriorVertexInt = false;
     if (!isInteriorIntersectionsOnly) {
-      bool isAdjacentSegment = (isSameSegString && ((segIndex1 - segIndex0).abs() <= 1));
-      isInteriorVertexInt = ((!isAdjacentSegment) && isInteriorVertexIntersection8(p00, p01, p10, p11, isEnd00, isEnd01, isEnd10, isEnd11));
+      bool isAdjacentSegment =
+          (isSameSegString && ((segIndex1 - segIndex0).abs() <= 1));
+      isInteriorVertexInt = ((!isAdjacentSegment) &&
+          isInteriorVertexIntersection8(
+              p00, p01, p10, p11, isEnd00, isEnd01, isEnd10, isEnd11));
     }
     if (isInteriorInt || isInteriorVertexInt) {
       intSegments = new List<Coordinate>(4);
@@ -513,8 +507,15 @@ class NodingIntersectionFinder extends SegmentIntersectorN
     }
   }
 
-  static bool isInteriorVertexIntersection8(Coordinate p00, Coordinate p01, Coordinate p10, Coordinate p11, bool isEnd00, bool isEnd01, bool isEnd10, bool isEnd11)
-  {
+  static bool isInteriorVertexIntersection8(
+      Coordinate p00,
+      Coordinate p01,
+      Coordinate p10,
+      Coordinate p11,
+      bool isEnd00,
+      bool isEnd01,
+      bool isEnd10,
+      bool isEnd11) {
     if (isInteriorVertexIntersection4(p00, p10, isEnd00, isEnd10)) {
       return true;
     }
@@ -530,8 +531,8 @@ class NodingIntersectionFinder extends SegmentIntersectorN
     return false;
   }
 
-  static bool isInteriorVertexIntersection4(Coordinate p0, Coordinate p1, bool isEnd0, bool isEnd1)
-  {
+  static bool isInteriorVertexIntersection4(
+      Coordinate p0, Coordinate p1, bool isEnd0, bool isEnd1) {
     if (isEnd0 && isEnd1) {
       return false;
     }
@@ -541,8 +542,7 @@ class NodingIntersectionFinder extends SegmentIntersectorN
     return false;
   }
 
-  static bool isEndSegment(SegmentString segStr, int index)
-  {
+  static bool isEndSegment(SegmentString segStr, int index) {
     if (index == 0) {
       return true;
     }
@@ -552,8 +552,7 @@ class NodingIntersectionFinder extends SegmentIntersectorN
     return false;
   }
 
-  bool isDone()
-  {
+  bool isDone() {
     if (findAllIntersections) {
       return false;
     }

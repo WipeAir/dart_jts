@@ -21,14 +21,16 @@ class MultiPoint extends GeometryCollection implements Puntal {
    * @deprecated Use GeometryFactory instead
    */
   MultiPoint(List<Point> points, PrecisionModel precisionModel, int SRID)
-      : super.withFactory(points, new GeometryFactory.withPrecisionModelSrid(precisionModel, SRID));
+      : super.withFactory(points,
+            new GeometryFactory.withPrecisionModelSrid(precisionModel, SRID));
 
   /**
    *@param  points          the <code>Point</code>s for this <code>MultiPoint</code>
    *      , or <code>null</code> or an empty array to create the empty geometry.
    *      Elements may be empty <code>Point</code>s, but not <code>null</code>s.
    */
-  MultiPoint.withFactory(List<Point> points, GeometryFactory factory) : super.withFactory(points, factory);
+  MultiPoint.withFactory(List<Point> points, GeometryFactory factory)
+      : super.withFactory(points, factory);
 
   int getDimension() {
     return 0;

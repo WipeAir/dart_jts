@@ -80,7 +80,8 @@ class SortedPackedIntervalRTree {
    * @throws IllegalStateException if the index has already been queried
    */
   void insert(double min, double max, Object item) {
-    if (root != null) throw new StateError("Index cannot be added to once it has been queried");
+    if (root != null)
+      throw new StateError("Index cannot be added to once it has been queried");
     leaves.add(new IntervalRTreeLeafNode(min, max, item));
   }
 
@@ -129,11 +130,13 @@ class SortedPackedIntervalRTree {
     dest.clear();
     for (int i = 0; i < src.length; i += 2) {
       IntervalRTreeNode n1 = src[i] as IntervalRTreeNode;
-      IntervalRTreeNode n2 = (i + 1 < src.length) ? src[i] as IntervalRTreeNode : null;
+      IntervalRTreeNode n2 =
+          (i + 1 < src.length) ? src[i] as IntervalRTreeNode : null;
       if (n2 == null) {
         dest.add(n1);
       } else {
-        IntervalRTreeNode node = new IntervalRTreeBranchNode(src[i], src[i + 1]);
+        IntervalRTreeNode node =
+            new IntervalRTreeBranchNode(src[i], src[i + 1]);
 //        printNode(node);
 //				System.out.println(node);
         dest.add(node);
@@ -142,7 +145,9 @@ class SortedPackedIntervalRTree {
   }
 
   void printNode(IntervalRTreeNode node) {
-    print(WKTWriter.toLineStringFromCoords(new Coordinate(node.min, level.toDouble()), new Coordinate(node.max, level.toDouble())));
+    print(WKTWriter.toLineStringFromCoords(
+        new Coordinate(node.min, level.toDouble()),
+        new Coordinate(node.max, level.toDouble())));
   }
 
   /**
@@ -183,7 +188,8 @@ abstract class IntervalRTreeNode {
   }
 
   String toString() {
-    return WKTWriter.toLineStringFromCoords(new Coordinate(min, 0), new Coordinate(max, 0));
+    return WKTWriter.toLineStringFromCoords(
+        new Coordinate(min, 0), new Coordinate(max, 0));
   }
 }
 
@@ -354,7 +360,8 @@ abstract class EdgeSetIntersector {
    * @param si the SegmentIntersector to use
    * @param testAllSegments true if self-intersections are to be tested as well
    */
-  void computeIntersections(List edges, SegmentIntersector si, bool testAllSegments);
+  void computeIntersections(
+      List edges, SegmentIntersector si, bool testAllSegments);
 
   /**
    * Computes all mutual intersections between two sets of edges.
@@ -384,7 +391,8 @@ class SimpleMCSweepLineIntersector extends EdgeSetIntersector {
    */
   SimpleMCSweepLineIntersector() {}
 
-  void computeIntersections(List edges, SegmentIntersector si, bool testAllSegments) {
+  void computeIntersections(
+      List edges, SegmentIntersector si, bool testAllSegments) {
     if (testAllSegments)
       addEdgesWithSet(edges, null);
     else
@@ -418,7 +426,8 @@ class SimpleMCSweepLineIntersector extends EdgeSetIntersector {
     List<int> startIndex = mce.getStartIndexes();
     for (int i = 0; i < startIndex.length - 1; i++) {
       MonotoneChain mc = new MonotoneChain(mce, i);
-      SweepLineEvent insertEvent = new SweepLineEvent(edgeSet, mce.getMinX(i), mc);
+      SweepLineEvent insertEvent =
+          new SweepLineEvent(edgeSet, mce.getMinX(i), mc);
       events.add(insertEvent);
       events.add(new SweepLineEvent.withEvent(mce.getMaxX(i), insertEvent));
     }
@@ -455,7 +464,8 @@ class SimpleMCSweepLineIntersector extends EdgeSetIntersector {
     }
   }
 
-  void processOverlaps(int start, int end, SweepLineEvent ev0, SegmentIntersector si) {
+  void processOverlaps(
+      int start, int end, SweepLineEvent ev0, SegmentIntersector si) {
     MonotoneChain mc0 = ev0.getObject();
     /**
      * Since we might need to test for self-intersections,
@@ -513,7 +523,8 @@ class SegmentIntersector {
   bool _isDone = false;
   bool _isDoneWhenProperInt = false;
 
-  SegmentIntersector(LineIntersector li, bool includeProper, bool recordIsolated) {
+  SegmentIntersector(
+      LineIntersector li, bool includeProper, bool recordIsolated) {
     this._li = li;
     this._includeProper = includeProper;
     this._recordIsolated = recordIsolated;
@@ -575,7 +586,8 @@ class SegmentIntersector {
         if (isAdjacentSegments(segIndex0, segIndex1)) return true;
         if (e0.isClosed()) {
           int maxSegIndex = e0.getNumPoints() - 1;
-          if ((segIndex0 == 0 && segIndex1 == maxSegIndex) || (segIndex1 == 0 && segIndex0 == maxSegIndex)) {
+          if ((segIndex0 == 0 && segIndex1 == maxSegIndex) ||
+              (segIndex1 == 0 && segIndex0 == maxSegIndex)) {
             return true;
           }
         }
@@ -728,11 +740,19 @@ class MonotoneChainEdge {
     }
   }
 
-  void computeIntersectsForChain(int chainIndex0, MonotoneChainEdge mce, int chainIndex1, SegmentIntersector si) {
-    computeIntersectsForChain6(startIndex[chainIndex0], startIndex[chainIndex0 + 1], mce, mce.startIndex[chainIndex1], mce.startIndex[chainIndex1 + 1], si);
+  void computeIntersectsForChain(int chainIndex0, MonotoneChainEdge mce,
+      int chainIndex1, SegmentIntersector si) {
+    computeIntersectsForChain6(
+        startIndex[chainIndex0],
+        startIndex[chainIndex0 + 1],
+        mce,
+        mce.startIndex[chainIndex1],
+        mce.startIndex[chainIndex1 + 1],
+        si);
   }
 
-  void computeIntersectsForChain6(int start0, int end0, MonotoneChainEdge mce, int start1, int end1, SegmentIntersector ei) {
+  void computeIntersectsForChain6(int start0, int end0, MonotoneChainEdge mce,
+      int start1, int end1, SegmentIntersector ei) {
 //Debug.println("computeIntersectsForChain:" + p00 + p01 + p10 + p11);
 
     // terminating condition for the recursion
@@ -750,12 +770,16 @@ class MonotoneChainEdge {
     // Assert: mid != start or end (since we checked above for end - start <= 1)
     // check terminating conditions before recursing
     if (start0 < mid0) {
-      if (start1 < mid1) computeIntersectsForChain6(start0, mid0, mce, start1, mid1, ei);
-      if (mid1 < end1) computeIntersectsForChain6(start0, mid0, mce, mid1, end1, ei);
+      if (start1 < mid1)
+        computeIntersectsForChain6(start0, mid0, mce, start1, mid1, ei);
+      if (mid1 < end1)
+        computeIntersectsForChain6(start0, mid0, mce, mid1, end1, ei);
     }
     if (mid0 < end0) {
-      if (start1 < mid1) computeIntersectsForChain6(mid0, end0, mce, start1, mid1, ei);
-      if (mid1 < end1) computeIntersectsForChain6(mid0, end0, mce, mid1, end1, ei);
+      if (start1 < mid1)
+        computeIntersectsForChain6(mid0, end0, mce, start1, mid1, ei);
+      if (mid1 < end1)
+        computeIntersectsForChain6(mid0, end0, mce, mid1, end1, ei);
     }
   }
 
@@ -769,8 +793,10 @@ class MonotoneChainEdge {
    * @param end1
    * @return true if the section envelopes overlap
    */
-  bool overlaps(int start0, int end0, MonotoneChainEdge mce, int start1, int end1) {
-    return Envelope.intersectsEnvelopeCoords(pts[start0], pts[end0], mce.pts[start1], mce.pts[end1]);
+  bool overlaps(
+      int start0, int end0, MonotoneChainEdge mce, int start1, int end1) {
+    return Envelope.intersectsEnvelopeCoords(
+        pts[start0], pts[end0], mce.pts[start1], mce.pts[end1]);
   }
 }
 

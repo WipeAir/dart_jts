@@ -1,9 +1,7 @@
 part of dart_jts;
 
-class OverlapUnion
-{
-  static Geometry unionStatic(Geometry g0, Geometry g1)
-  {
+class OverlapUnion {
+  static Geometry unionStatic(Geometry g0, Geometry g1) {
     OverlapUnion union = new OverlapUnion(g0, g1);
     return union.union();
   }
@@ -13,15 +11,13 @@ class OverlapUnion
   Geometry g1;
   bool isUnionSafe;
 
-
   /**
    * Creates a new instance for unioning the given geometries.
    *
    * @param g0 a geometry to union
    * @param g1 a geometry to union
    */
-  OverlapUnion(Geometry g0, Geometry g1)
-  {
+  OverlapUnion(Geometry g0, Geometry g1) {
     this.g0 = g0;
     this.g1 = g1;
     geomFactory = g0.getFactory();
@@ -33,9 +29,8 @@ class OverlapUnion
    *
    * @return the union of the inputs
    */
-  Geometry union()
-  {
-    Envelope overlapEnv = overlapEnvelope(g0,  g1);
+  Geometry union() {
+    Envelope overlapEnv = overlapEnvelope(g0, g1);
 
     /**
      * If no overlap, can just combine the geometries
@@ -56,12 +51,11 @@ class OverlapUnion
 
     Geometry result = null;
     isUnionSafe = isBorderSegmentsSame(unionGeom, overlapEnv);
-    if (! isUnionSafe) {
+    if (!isUnionSafe) {
       // overlap union changed border segments... need to do full union
       //System.out.println("OverlapUnion: Falling back to full union");
       result = unionFull(g0, g1);
-    }
-    else {
+    } else {
       //System.out.println("OverlapUnion: fast path");
       result = combine(unionGeom, disjointPolys);
     }
@@ -87,24 +81,21 @@ class OverlapUnion
   }
 
   Geometry combine(Geometry unionGeom, List<Geometry> disjointPolys) {
-    if (disjointPolys.length <= 0)
-      return unionGeom;
+    if (disjointPolys.length <= 0) return unionGeom;
 
     disjointPolys.add(unionGeom);
     Geometry result = GeometryCombiner.combine1(disjointPolys);
     return result;
   }
 
-  Geometry extractByEnvelope(Envelope env, Geometry geom,
-      List<Geometry> disjointGeoms)
-  {
+  Geometry extractByEnvelope(
+      Envelope env, Geometry geom, List<Geometry> disjointGeoms) {
     List<Geometry> intersectingGeoms = [];
     for (int i = 0; i < geom.getNumGeometries(); i++) {
       Geometry elem = geom.getGeometryN(i);
       if (elem.getEnvelopeInternal().intersectsEnvelope(env)) {
         intersectingGeoms.add(elem);
-      }
-      else {
+      } else {
         Geometry copy = elem.copy();
         disjointGeoms.add(copy);
       }
@@ -133,8 +124,7 @@ class OverlapUnion
    * @param g1 a geometry
    * @return the union of the geometries
    */
-  static Geometry unionBuffer(Geometry g0, Geometry g1)
-  {
+  static Geometry unionBuffer(Geometry g0, Geometry g1) {
     GeometryFactory factory = g0.getFactory();
     Geometry gColl = factory.createGeometryCollection([g0, g1]);
     Geometry union = gColl.buffer(0.0);
@@ -152,14 +142,13 @@ class OverlapUnion
   }
 
   bool isEqual(List<LineSegment> segs0, List<LineSegment> segs1) {
-    if (segs0.length != segs1.length)
-      return false;
+    if (segs0.length != segs1.length) return false;
 
     Set<LineSegment> segIndex = new HashSet<LineSegment>();
     segIndex.addAll(segs0);
 
     for (final seg in segs1) {
-      if (! segIndex.contains(seg)) {
+      if (!segIndex.contains(seg)) {
         //System.out.println("Found changed border seg: " + seg);
         return false;
       }
@@ -167,11 +156,11 @@ class OverlapUnion
     return true;
   }
 
-  List<LineSegment> extractBorderSegments(Geometry geom0, Geometry geom1, Envelope env) {
+  List<LineSegment> extractBorderSegments(
+      Geometry geom0, Geometry geom1, Envelope env) {
     List<LineSegment> segs = [];
     extractBorderSegmentsStatic(geom0, env, segs);
-    if (geom1 != null)
-      extractBorderSegmentsStatic(geom1, env, segs);
+    if (geom1 != null) extractBorderSegmentsStatic(geom1, env, segs);
     return segs;
   }
 
@@ -191,7 +180,8 @@ class OverlapUnion
         p.getY() < env.getMaxY();
   }
 
-  static void extractBorderSegmentsStatic(Geometry geom, Envelope env, List<LineSegment> segs) {
+  static void extractBorderSegmentsStatic(
+      Geometry geom, Envelope env, List<LineSegment> segs) {
     geom.applyCSF(_ExtractBorderSegmentsStaticApply(env, segs));
   }
 }
@@ -208,14 +198,19 @@ class _ExtractBorderSegmentsStaticApply implements CoordinateSequenceFilter {
     // extract LineSegment
     Coordinate p0 = seq.getCoordinate(i - 1);
     Coordinate p1 = seq.getCoordinate(i);
-    bool isBorder = OverlapUnion.intersects(env, p0, p1) && ! OverlapUnion.containsProperly3(env, p0, p1);
+    bool isBorder = OverlapUnion.intersects(env, p0, p1) &&
+        !OverlapUnion.containsProperly3(env, p0, p1);
     if (isBorder) {
       LineSegment seg = LineSegment.fromCoordinates(p0, p1);
       segs.add(seg);
     }
   }
 
-  bool isDone() {   return false;   }
+  bool isDone() {
+    return false;
+  }
 
-  bool isGeometryChanged() {   return false;   }
+  bool isGeometryChanged() {
+    return false;
+  }
 }

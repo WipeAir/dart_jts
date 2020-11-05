@@ -108,7 +108,8 @@ class PriorityQueue {
 
     for (; hole * 2 <= _size; hole = child) {
       child = hole * 2;
-      if (child != _size && (_items[child + 1] as Comparable).compareTo(_items[child]) < 0) {
+      if (child != _size &&
+          (_items[child + 1] as Comparable).compareTo(_items[child]) < 0) {
         child++;
       }
       if ((_items[child] as Comparable).compareTo(tmp) < 0)
@@ -154,9 +155,11 @@ class Assert {
    *@param  message                    a description of the assertion
    *@throws  AssertionFailedException  if the two objects are not equal
    */
-  static void equals(Object expectedValue, Object actualValue, [String message]) {
+  static void equals(Object expectedValue, Object actualValue,
+      [String message]) {
     if (actualValue != expectedValue) {
-      assert(true, "Expected $expectedValue but encountered $actualValue ${message != null ? ": " + message : ""}");
+      assert(true,
+          "Expected $expectedValue but encountered $actualValue ${message != null ? ": " + message : ""}");
     }
   }
 
@@ -168,6 +171,7 @@ class Assert {
    *@throws  AssertionFailedException  thrown always
    */
   static void shouldNeverReachHere([String message]) {
-    assert(true, "Should never reach here" + (message != null ? ": " + message : ""));
+    assert(true,
+        "Should never reach here" + (message != null ? ": " + message : ""));
   }
 }

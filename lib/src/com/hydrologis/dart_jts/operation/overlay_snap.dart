@@ -13,7 +13,8 @@ class LineStringSnapper {
     this.snapTolerance = snapTolerance;
   }
 
-  factory LineStringSnapper.fromLineString (LineString srcLine, double snapTolerance) {
+  factory LineStringSnapper.fromLineString(
+      LineString srcLine, double snapTolerance) {
     return LineStringSnapper(srcLine.getCoordinates(), snapTolerance);
   }
 
