@@ -267,7 +267,7 @@ class Polygon extends Geometry implements Polygonal {
       return false;
     }
     for (int i = 0; i < holes.length; i++) {
-      if (!(holes[i] as Geometry)
+      if (!(holes[i])
           .equalsExactWithTol(otherPolygon.holes[i], tolerance)) {
         return false;
       }
@@ -357,8 +357,8 @@ class Polygon extends Geometry implements Polygonal {
     int nHole2 = poly.getNumInteriorRing();
     int i = 0;
     while (i < nHole1 && i < nHole2) {
-      LinearRing thisHole = getInteriorRingN(i) as LinearRing;
-      LinearRing otherHole = poly.getInteriorRingN(i) as LinearRing;
+      LinearRing thisHole = getInteriorRingN(i);
+      LinearRing otherHole = poly.getInteriorRingN(i);
       int holeComp = thisHole.compareToSameClassWithComparator(otherHole, comp);
       if (holeComp != 0) return holeComp;
       i++;

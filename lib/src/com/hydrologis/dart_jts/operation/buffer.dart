@@ -1711,7 +1711,7 @@ class OffsetCurveBuilder {
    void OLDcomputeLineBufferCurve(List<Coordinate> inputPts)
   {
     int n = inputPts.length - 1;
-    
+
     // compute points for left side of line
     initSideSegments(inputPts[0], inputPts[1], Position.LEFT);
     for (int i = 2; i <= n; i++) {
@@ -2715,7 +2715,7 @@ class BufferInputLineSimplifier {
   bool isShallowSampled(
       Coordinate p0, Coordinate p2, int i0, int i2, double distanceTol) {
     // check every n'th point to see if it is within tolerance
-    int inc = ((i2 - i0) / NUM_PTS_TO_CHECK).toInt();
+    int inc = (i2 - i0) ~/ NUM_PTS_TO_CHECK;
     if (inc <= 0) inc = 1;
 
     for (int i = i0; i < i2; i += inc) {
@@ -2791,20 +2791,20 @@ class OffsetCurveSetBuilder {
     if (g.isEmpty()) return;
 
     if (g is Polygon)
-      addPolygon(g as Polygon);
+      addPolygon(g);
     // LineString also handles LinearRings
     else if (g is LineString)
-      addLineString(g as LineString);
+      addLineString(g);
     else if (g is Point)
-      addPoint(g as Point);
+      addPoint(g);
     else if (g is MultiPoint)
-      addCollection(g as MultiPoint);
+      addCollection(g);
     else if (g is MultiLineString)
-      addCollection(g as MultiLineString);
+      addCollection(g);
     else if (g is MultiPolygon)
-      addCollection(g as MultiPolygon);
+      addCollection(g);
     else if (g is GeometryCollection)
-      addCollection(g as GeometryCollection);
+      addCollection(g);
     else
       throw new UnsupportedError(g.runtimeType.toString());
   }

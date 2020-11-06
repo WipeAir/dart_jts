@@ -249,7 +249,7 @@ void checkTransformation(
     double det = trans.getDeterminant();
     double detInv = invTrans.getDeterminant();
     assertEqualsD(det, 1.0 / detInv, .00005);
-  } on Exception catch (e) {}
+  } on Exception {}
 }
 
 WKTReader rdr = new WKTReader();

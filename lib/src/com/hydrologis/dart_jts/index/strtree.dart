@@ -662,7 +662,7 @@ abstract class AbstractSTRtree {
     for (Iterator i = node.getChildBoundables().iterator; i.moveNext();) {
       Boundable childBoundable = i.current as Boundable;
       if (childBoundable is AbstractNode) {
-        size += sizeWithNode(childBoundable as AbstractNode);
+        size += sizeWithNode(childBoundable);
       } else if (childBoundable is ItemBoundable) {
         size += 1;
       }
@@ -683,7 +683,7 @@ abstract class AbstractSTRtree {
     for (Iterator i = node.getChildBoundables().iterator; i.moveNext();) {
       Boundable childBoundable = i.current as Boundable;
       if (childBoundable is AbstractNode) {
-        int childDepth = depthWithNode(childBoundable as AbstractNode);
+        int childDepth = depthWithNode(childBoundable);
         if (childDepth > maxChildDepth) maxChildDepth = childDepth;
       }
     }
@@ -743,9 +743,9 @@ abstract class AbstractSTRtree {
         continue;
       }
       if (childBoundable is AbstractNode) {
-        queryInternal(searchBounds, childBoundable as AbstractNode, matches);
+        queryInternal(searchBounds, childBoundable, matches);
       } else if (childBoundable is ItemBoundable) {
-        matches.add((childBoundable as ItemBoundable).getItem());
+        matches.add((childBoundable).getItem());
       } else {
         Assert.shouldNeverReachHere();
       }
@@ -763,9 +763,9 @@ abstract class AbstractSTRtree {
       }
       if (childBoundable is AbstractNode) {
         queryInternalWithVisitor(
-            searchBounds, childBoundable as AbstractNode, visitor);
+            searchBounds, childBoundable, visitor);
       } else if (childBoundable is ItemBoundable) {
-        visitor.visitItem((childBoundable as ItemBoundable).getItem());
+        visitor.visitItem((childBoundable).getItem());
       } else {
         Assert.shouldNeverReachHere();
       }
@@ -798,12 +798,12 @@ abstract class AbstractSTRtree {
       Boundable childBoundable = i.current as Boundable;
       if (childBoundable is AbstractNode) {
         List valuesTreeForChild =
-            itemsTreeWithNode(childBoundable as AbstractNode);
+            itemsTreeWithNode(childBoundable);
         // only add if not null (which indicates an item somewhere in this tree
         if (valuesTreeForChild != null)
           valuesTreeForNode.add(valuesTreeForChild);
       } else if (childBoundable is ItemBoundable) {
-        valuesTreeForNode.add((childBoundable as ItemBoundable).getItem());
+        valuesTreeForNode.add((childBoundable).getItem());
       } else {
         Assert.shouldNeverReachHere();
       }
@@ -829,7 +829,7 @@ abstract class AbstractSTRtree {
     for (Iterator i = node.getChildBoundables().iterator; i.moveNext();) {
       Boundable childBoundable = i.current as Boundable;
       if (childBoundable is ItemBoundable) {
-        if ((childBoundable as ItemBoundable).getItem() == item)
+        if ((childBoundable).getItem() == item)
           childToRemove = childBoundable;
       }
     }
@@ -855,10 +855,10 @@ abstract class AbstractSTRtree {
       }
       if (childBoundable is AbstractNode) {
         found =
-            removeWithNode(searchBounds, childBoundable as AbstractNode, item);
+            removeWithNode(searchBounds, childBoundable, item);
         // if found, record child for pruning and exit
         if (found) {
-          childToPrune = childBoundable as AbstractNode;
+          childToPrune = childBoundable;
           break;
         }
       }
@@ -890,7 +890,7 @@ abstract class AbstractSTRtree {
     for (Iterator i = top.getChildBoundables().iterator; i.moveNext();) {
       Boundable boundable = i.current as Boundable;
       if (boundable is AbstractNode) {
-        boundablesAtLevelWithNode(level, boundable as AbstractNode, boundables);
+        boundablesAtLevelWithNode(level, boundable, boundables);
       } else {
         Assert.isTrue(boundable is ItemBoundable);
         if (level == -1) {

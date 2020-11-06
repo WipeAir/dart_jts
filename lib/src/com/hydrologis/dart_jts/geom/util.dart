@@ -1526,7 +1526,7 @@ class LinearComponentExtracter implements GeometryComponentFilter {
     if (isForcedToLineString && geom is LinearRing) {
       LineString line = geom
           .getFactory()
-          .createLineStringSeq((geom as LinearRing).getCoordinateSequence());
+          .createLineStringSeq(geom.getCoordinateSequence());
       lines.add(line);
       return;
     }
@@ -1728,11 +1728,11 @@ class GeometryEditor {
     if (_geomFactory == null) _geomFactory = geometry.getFactory();
 
     if (geometry is GeometryCollection) {
-      return editGeometryCollection(geometry as GeometryCollection, operation);
+      return editGeometryCollection(geometry, operation);
     }
 
     if (geometry is Polygon) {
-      return editPolygon(geometry as Polygon, operation);
+      return editPolygon(geometry, operation);
     }
 
     if (geometry is Point) {
@@ -1896,17 +1896,17 @@ abstract class CoordinateSequenceOperation implements GeometryEditorOperation {
   Geometry edit(Geometry geometry, GeometryFactory gfactory) {
     if (geometry is LinearRing) {
       return gfactory.createLinearRingSeq(
-          editSeq((geometry as LinearRing).getCoordinateSequence(), geometry));
+          editSeq(geometry.getCoordinateSequence(), geometry));
     }
 
     if (geometry is LineString) {
       return gfactory.createLineStringSeq(
-          editSeq((geometry as LineString).getCoordinateSequence(), geometry));
+          editSeq(geometry.getCoordinateSequence(), geometry));
     }
 
     if (geometry is Point) {
       return gfactory.createPointSeq(
-          editSeq((geometry as Point).getCoordinateSequence(), geometry));
+          editSeq(geometry.getCoordinateSequence(), geometry));
     }
 
     return geometry;

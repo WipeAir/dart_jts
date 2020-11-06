@@ -222,8 +222,7 @@ class ConnectedInteriorTester {
    */
   void visitShellInteriors(Geometry g, PlanarGraph graph) {
     if (g is Polygon) {
-      Polygon p = g as Polygon;
-      visitInteriorRing(p.getExteriorRing(), graph);
+      visitInteriorRing(g.getExteriorRing(), graph);
     }
     if (g is MultiPolygon) {
       MultiPolygon mp = g;

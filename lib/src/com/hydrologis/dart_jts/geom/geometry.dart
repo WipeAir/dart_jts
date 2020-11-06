@@ -1867,18 +1867,6 @@ class GeometryFactory {
   }
 
   /**
-   *  Converts the <code>List</code> to an array.
-   *
-   *@param  geometries  the list of <code>Geometry's</code> to convert
-   *@return            the <code>List</code> in array format
-   */
-  static List<Geometry> toGeometryArray(List geometries) {
-    if (geometries == null) return null;
-    List<Geometry> geometryArray = [];
-    return geometries;
-  }
-
-  /**
    * Creates a {@link Geometry} with the same extent as the given envelope.
    * The Geometry returned is guaranteed to be valid.
    * To provide this behaviour, the following cases occur:

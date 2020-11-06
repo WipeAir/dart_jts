@@ -60,27 +60,27 @@ class Distance {
     // AB and CD are line segments
     /*
      * from comp.graphics.algo
-     * 
-     * Solving the above for r and s yields 
-     * 
-     *     (Ay-Cy)(Dx-Cx)-(Ax-Cx)(Dy-Cy) 
-     * r = ----------------------------- (eqn 1) 
+     *
+     * Solving the above for r and s yields
+     *
+     *     (Ay-Cy)(Dx-Cx)-(Ax-Cx)(Dy-Cy)
+     * r = ----------------------------- (eqn 1)
      *     (Bx-Ax)(Dy-Cy)-(By-Ay)(Dx-Cx)
-     * 
-     *     (Ay-Cy)(Bx-Ax)-(Ax-Cx)(By-Ay)  
+     *
+     *     (Ay-Cy)(Bx-Ax)-(Ax-Cx)(By-Ay)
      * s = ----------------------------- (eqn 2)
-     *     (Bx-Ax)(Dy-Cy)-(By-Ay)(Dx-Cx) 
-     *     
+     *     (Bx-Ax)(Dy-Cy)-(By-Ay)(Dx-Cx)
+     *
      * Let P be the position vector of the
-     * intersection point, then 
-     *   P=A+r(B-A) or 
-     *   Px=Ax+r(Bx-Ax) 
-     *   Py=Ay+r(By-Ay) 
+     * intersection point, then
+     *   P=A+r(B-A) or
+     *   Px=Ax+r(Bx-Ax)
+     *   Py=Ay+r(By-Ay)
      * By examining the values of r & s, you can also determine some other limiting
-     * conditions: 
-     *   If 0<=r<=1 & 0<=s<=1, intersection exists 
-     *      r<0 or r>1 or s<0 or s>1 line segments do not intersect 
-     *   If the denominator in eqn 1 is zero, AB & CD are parallel 
+     * conditions:
+     *   If 0<=r<=1 & 0<=s<=1, intersection exists
+     *      r<0 or r>1 or s<0 or s>1 line segments do not intersect
+     *   If the denominator in eqn 1 is zero, AB & CD are parallel
      *   If the numerator in eqn 1 is also zero, AB & CD are collinear.
      */
 
@@ -153,15 +153,15 @@ class Distance {
 
     // otherwise use comp.graphics.algorithms Frequently Asked Questions method
     /*
-     * (1) r = AC dot AB 
-     *         --------- 
-     *         ||AB||^2 
-     *         
-     * r has the following meaning: 
-     *   r=0 P = A 
-     *   r=1 P = B 
-     *   r<0 P is on the backward extension of AB 
-     *   r>1 P is on the forward extension of AB 
+     * (1) r = AC dot AB
+     *         ---------
+     *         ||AB||^2
+     *
+     * r has the following meaning:
+     *   r=0 P = A
+     *   r=1 P = B
+     *   r<0 P is on the backward extension of AB
+     *   r>1 P is on the forward extension of AB
      *   0<r<1 P is interior to AB
      */
 
@@ -172,12 +172,12 @@ class Distance {
     if (r >= 1.0) return p.distance(B);
 
     /*
-     * (2) s = (Ay-Cy)(Bx-Ax)-(Ax-Cx)(By-Ay) 
-     *         ----------------------------- 
+     * (2) s = (Ay-Cy)(Bx-Ax)-(Ax-Cx)(By-Ay)
+     *         -----------------------------
      *                    L^2
-     * 
+     *
      * Then the distance from C to P = |s|*L.
-     * 
+     *
      * This is the same calculation as {@link #distancePointLinePerpendicular}.
      * Unrolled here for performance.
      */
@@ -199,10 +199,10 @@ class Distance {
       Coordinate p, Coordinate A, Coordinate B) {
     // use comp.graphics.algorithms Frequently Asked Questions method
     /*
-     * (2) s = (Ay-Cy)(Bx-Ax)-(Ax-Cx)(By-Ay) 
-     *         ----------------------------- 
+     * (2) s = (Ay-Cy)(Bx-Ax)-(Ax-Cx)(By-Ay)
+     *         -----------------------------
      *                    L^2
-     * 
+     *
      * Then the distance from C to P = |s|*L.
      */
     double len2 = (B.x - A.x) * (B.x - A.x) + (B.y - A.y) * (B.y - A.y);
@@ -939,11 +939,11 @@ class DistanceToPoint {
   static void computeDistance(
       Geometry geom, Coordinate pt, PointPairDistance ptDist) {
     if (geom is LineString) {
-      computeDistance(geom as LineString, pt, ptDist);
+      computeDistance(geom, pt, ptDist);
     } else if (geom is Polygon) {
-      computeDistance(geom as Polygon, pt, ptDist);
+      computeDistance(geom, pt, ptDist);
     } else if (geom is GeometryCollection) {
-      GeometryCollection gc = geom as GeometryCollection;
+      GeometryCollection gc = geom;
       for (int i = 0; i < gc.getNumGeometries(); i++) {
         Geometry g = gc.getGeometryN(i);
         computeDistance(g, pt, ptDist);

@@ -221,22 +221,22 @@ class Orientation {
      * dependent, when computing the orientation of a point very close to a
      * line. This is possibly due to the arithmetic in the translation to the
      * origin.
-     * 
+     *
      * For instance, the following situation produces identical results in spite
      * of the inverse orientation of the line segment:
-     * 
+     *
      * Coordinate p0 = new Coordinate(219.3649559090992, 140.84159161824724);
      * Coordinate p1 = new Coordinate(168.9018919682399, -5.713787599646864);
-     * 
+     *
      * Coordinate p = new Coordinate(186.80814046338352, 46.28973405831556); int
      * orient = orientationIndex(p0, p1, p); int orientInv =
      * orientationIndex(p1, p0, p);
-     * 
+     *
      * A way to force consistent results is to normalize the orientation of the
      * vector using the following code. However, this may make the results of
      * orientationIndex inconsistent through the triangle of points, so it's not
      * clear this is an appropriate patch.
-     * 
+     *
      */
     return CGAlgorithmsDD.orientationIndex(p1, p2, q);
 
@@ -313,7 +313,7 @@ class Orientation {
      * If disc is exactly 0, lines are collinear. There are two possible cases:
      * (1) the lines lie along the x axis in opposite directions (2) the lines
      * lie on top of one another
-     * 
+     *
      * (1) is handled by checking if next is left of prev ==> CCW (2) will never
      * happen if the ring is valid, so don't check for it (Might want to assert
      * this)
@@ -595,7 +595,7 @@ abstract class LineIntersector {
 
   int result;
   List<List<Coordinate>> inputLines =
-      MatrixUtils.createMatrix(2, 2, null as Coordinate);
+      MatrixUtils.createMatrix(2, 2, null);
   List<Coordinate> intPt = List(2);
 
   /// The indexes of the endpoints of the intersection lines, in order along
@@ -725,7 +725,7 @@ abstract class LineIntersector {
 
   void computeIntLineIndex() {
     if (intLineIndex == null) {
-      intLineIndex = MatrixUtils.createMatrix(2, 2, 0 as int);
+      intLineIndex = MatrixUtils.createMatrix(2, 2, 0);
       computeIntLineIndexWithIndex(0);
       computeIntLineIndexWithIndex(1);
     }

@@ -261,7 +261,7 @@ class MonotoneChainI {
     if (!searchEnv.intersectsEnvelopeCoordinates(p0, p1)) return;
 
     // the chains overlap, so split each in half and iterate  (binary search)
-    int mid = ((start0 + end0) / 2).toInt();
+    int mid = (start0 + end0) ~/ 2;
 
     // Assert: mid != start or end (since we checked above for end - start <= 1)
     // check terminating conditions before recursing
@@ -315,8 +315,8 @@ class MonotoneChainI {
     if (!overlaps(start0, end0, mc, start1, end1)) return;
 
     // the chains overlap, so split each in half and iterate  (binary search)
-    int mid0 = ((start0 + end0) / 2).toInt();
-    int mid1 = ((start1 + end1) / 2).toInt();
+    int mid0 = (start0 + end0) ~/ 2;
+    int mid1 = (start1 + end1) ~/ 2;
 
     // Assert: mid != start or end (since we checked above for end - start <= 1)
     // check terminating conditions before recursing
