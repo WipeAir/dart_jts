@@ -1299,14 +1299,14 @@ abstract class Geometry implements Comparable {
    * @throws IllegalArgumentException if either input is a non-empty GeometryCollection
    */
   Geometry difference(Geometry other) {
-    throw UnimplementedError("Not implemented yet"); // TODO
-//    // special case: if A.isEmpty ==> empty; if B.isEmpty ==> A
-//    if (this.isEmpty()) return OverlayOp.createEmptyResult(OverlayOp.DIFFERENCE, this, other, factory);
-//    if (other.isEmpty()) return copy();
-//
-//    checkNotGeometryCollection(this);
-//    checkNotGeometryCollection(other);
-//    return SnapIfNeededOverlayOp.overlayOp(this, other, OverlayOp.DIFFERENCE);
+    // special case: if A.isEmpty ==> empty; if B.isEmpty ==> A
+    if (this.isEmpty()) return OverlayOp.createEmptyResult(OverlayOp.DIFFERENCE, this, other, this.getFactory());
+    if (other.isEmpty()) return this.copy();
+
+    Geometry.checkNotGeometryCollection(this);
+    Geometry.checkNotGeometryCollection(other);
+
+    return SnapIfNeededOverlayOp.overlayOp(this, other, OverlayOp.DIFFERENCE);
   }
 
   /**
