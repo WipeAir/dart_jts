@@ -2249,11 +2249,11 @@ class GeometryFactory {
     bool isCollection = geomList.length > 1;
     if (isCollection) {
       if (geom0 is Polygon) {
-        return createMultiPolygon(geomList);
+        return createMultiPolygon(geomList.cast<Polygon>());
       } else if (geom0 is LineString) {
-        return createMultiLineString(geomList);
+        return createMultiLineString(geomList.cast<LineString>());
       } else if (geom0 is Point) {
-        return createMultiPoint(geomList);
+        return createMultiPoint(geomList.cast<Point>());
       }
       Assert.shouldNeverReachHere("Unhandled class: ${geom0.runtimeType}");
     }
