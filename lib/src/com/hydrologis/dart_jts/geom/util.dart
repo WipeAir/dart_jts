@@ -1970,7 +1970,7 @@ class GeometryCombiner {
   }
 
   Geometry combine() {
-    List elems = [];
+    List<Geometry> elems = [];
     for (Iterator i = inputGeoms.iterator; i.moveNext();) {
       Geometry g = i.current;
       extractElements(g, elems);
@@ -1984,7 +1984,7 @@ class GeometryCombiner {
     return geomFactory.buildGeometry(elems);
   }
 
-  void extractElements(Geometry geom, List elems) {
+  void extractElements(Geometry geom, List<Geometry> elems) {
     if (geom == null) {
       return;
     }
