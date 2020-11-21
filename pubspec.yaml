@@ -9,7 +9,7 @@ environment:
   sdk: '>=2.4.0 <3.0.0'
 
 dependencies:
-  intl: ^0.16.1-0
+  intl: ^0.17.0-nullsafety.2
   hex: ^0.1.2
   collection: ^1.14.13
 
