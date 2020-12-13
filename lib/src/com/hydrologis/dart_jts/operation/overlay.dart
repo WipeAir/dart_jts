@@ -771,14 +771,18 @@ class OverlayOp extends GeometryGraphOperation {
    */
   void _replaceCollapsedEdges() {
     List<Edge> newEdges = [];
-    for (Iterator it = _edgeList.iterator(); it.moveNext();) {
-      Edge e = it.current as Edge;
+    List<Edge> removeEdges = [];
+
+    for(final e in _edgeList.edges) {
       if (e.isCollapsed()) {
-//Debug.print(e);
-        _edgeList.edges.remove(e);
+        removeEdges.add(e);
         newEdges.add(e.getCollapsedEdge());
       }
     }
+
+    for (final re in removeEdges)
+      _edgeList.edges.remove(re);
+
     _edgeList.addAll(newEdges);
   }
 
