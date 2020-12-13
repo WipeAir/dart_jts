@@ -2632,7 +2632,7 @@ class Edge extends GraphComponent {
   }
 
   Edge getCollapsedEdge() {
-    List<Coordinate> newPts = [];
+    List<Coordinate> newPts = List(2);
     newPts[0] = pts[0];
     newPts[1] = pts[1];
     Edge newe = new Edge(newPts, Label.toLineLabel(label));
