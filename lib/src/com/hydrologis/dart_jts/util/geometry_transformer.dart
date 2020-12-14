@@ -104,7 +104,7 @@ class GeometryTransformer {
   }
 
   Geometry transformMultiPoint(MultiPoint geom, Geometry parent) {
-    List transGeomList = [];
+    List<Geometry> transGeomList = [];
     for (int i = 0; i < geom.getNumGeometries(); i++) {
       Geometry transformGeom =
           transformPoint(geom.getGeometryN(i) as Point, geom);
@@ -153,7 +153,7 @@ class GeometryTransformer {
   }
 
   Geometry transformMultiLineString(MultiLineString geom, Geometry parent) {
-    List transGeomList = [];
+    List<Geometry> transGeomList = [];
     for (int i = 0; i < geom.getNumGeometries(); i++) {
       Geometry transformGeom =
           transformLineString(geom.getGeometryN(i) as LineString, geom);
@@ -185,7 +185,7 @@ class GeometryTransformer {
     if (isAllValidLinearRings)
       return factory.createPolygon(shell as LinearRing, holes);
     else {
-      List components = [];
+      List<Geometry> components = [];
       if (shell != null) components.add(shell);
       components.addAll(holes);
       return factory.buildGeometry(components);
@@ -193,7 +193,7 @@ class GeometryTransformer {
   }
 
   Geometry transformMultiPolygon(MultiPolygon geom, Geometry parent) {
-    List transGeomList = [];
+    List<Geometry> transGeomList = [];
     for (int i = 0; i < geom.getNumGeometries(); i++) {
       Geometry transformGeom =
           transformPolygon(geom.getGeometryN(i) as Polygon, geom);
@@ -206,7 +206,7 @@ class GeometryTransformer {
 
   Geometry transformGeometryCollection(
       GeometryCollection geom, Geometry parent) {
-    List transGeomList = [];
+    List<Geometry> transGeomList = [];
     for (int i = 0; i < geom.getNumGeometries(); i++) {
       Geometry transformGeom = transform(geom.getGeometryN(i));
       if (transformGeom == null) continue;
