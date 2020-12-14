@@ -751,7 +751,7 @@ class CoordinateList {
    * @param coord the initial coordinates
    */
   CoordinateList.fromList(List<Coordinate> coord) {
-    _backingList = List(coord.length);
+    _backingList = List();
     addList(coord, true);
   }
 
@@ -764,7 +764,7 @@ class CoordinateList {
    */
   CoordinateList.fromListAllowRepeat(
       List<Coordinate> coord, bool allowRepeated) {
-    _backingList = List(coord.length);
+    _backingList = List();
     addList(coord, allowRepeated);
   }
 
@@ -1024,10 +1024,10 @@ class Triangle {
    * { // MD - not sure what we can do to prevent this (robustness problem) //
    * Idea - can we condition which edges we choose? throw new
    * IllegalStateException(ex.getMessage()); }
-   * 
+   *
    * //System.out.println("Acc = " + a.distance(cc) + ", Bcc = " +
    * b.distance(cc) + ", Ccc = " + c.distance(cc) );
-   * 
+   *
    * return cc; }
    */
 

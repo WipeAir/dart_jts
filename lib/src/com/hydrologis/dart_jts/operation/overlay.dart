@@ -1376,7 +1376,7 @@ class GeometrySnapper {
 
   List<Coordinate> extractTargetCoordinates(Geometry g) {
     // TODO: should do this more efficiently.  Use CoordSeq filter to get points, KDTree for uniqueness & queries
-    Set ptSet = HashSet();
+    Set ptSet = HashSet<Coordinate>();
     List<Coordinate> pts = g.getCoordinates();
     for (int i = 0; i < pts.length; i++) {
       ptSet.add(pts[i]);

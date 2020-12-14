@@ -171,7 +171,7 @@ class GeometryTransformer {
     if (shell == null || !(shell is LinearRing) || shell.isEmpty())
       isAllValidLinearRings = false;
 
-    List holes = [];
+    List<LinearRing> holes = [];
     for (int i = 0; i < geom.getNumInteriorRing(); i++) {
       Geometry hole = transformLinearRing(geom.getInteriorRingN(i), geom);
       if (hole == null || hole.isEmpty()) {
