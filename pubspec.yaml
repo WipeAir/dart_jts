@@ -9,9 +9,9 @@ environment:
   sdk: '>=2.4.0 <3.0.0'
 
 dependencies:
-  intl: ^0.16.1
-  hex: ^0.1.2
-  collection: ^1.14.13
+  intl: '>=0.16.1'
+  hex: '>=0.1.2'
+  collection: '>=1.14.13'
 
 dev_dependencies:
   pedantic: ^1.9.0
